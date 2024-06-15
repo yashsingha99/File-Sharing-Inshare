@@ -1,0 +1,27 @@
+.App-scroll {
+  overflow: scroll;
+  scrollbar-width: none;
+}
+
+.App-scroll::-webkit-scrollbar {
+  display: none;
+}
+.App-scroll::-webkit-scrollbar {
+  display: none;
+}
+.drop{
+  border: 1px dashed rgb(38, 116, 184);
+}
+.drop:hover{
+ border: 2px dashed rgb(38, 116, 184);
+} 
+.allDroppedFiles{
+  border:2px solid rgb(14 116 144);
+}
+
+.btn-border {
+  border: 2px solid rgb(14 116 144);
+}
+.index{
+  z-index: 10;
+}

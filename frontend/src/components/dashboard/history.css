@@ -1,0 +1,15 @@
+.history-scroll {
+    overflow: scroll;
+    scrollbar-width: none;
+  }
+  
+  .history-scroll::-webkit-scrollbar {
+    display: none;
+  }
+  .history-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .history{
+    border: 2px solid rgb(73, 139, 189);
+  }

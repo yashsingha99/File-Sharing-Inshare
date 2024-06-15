@@ -1,0 +1,27 @@
+.sider{
+   border-right: 1px solid rgb(56 189 248);
+overflow: scroll;
+scrollbar-width: none;
+}
+
+.sider::-webkit-scrollbar {
+display: none;
+}
+.sider::-webkit-scrollbar {
+display: none;
+}
+.header{
+   border-bottom: 2px solid rgb(56 189 248);
+}
+/* rgb(56 189 248) */
+.App-scroll {
+   overflow: scroll;
+   scrollbar-width: none;
+ }
+ 
+ .App-scroll::-webkit-scrollbar {
+   display: none;
+ }
+ .App-scroll::-webkit-scrollbar {
+   display: none;
+ }
