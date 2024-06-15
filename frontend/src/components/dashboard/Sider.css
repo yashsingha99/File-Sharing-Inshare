@@ -1,27 +1,31 @@
-.sider{
-   border-right: 1px solid rgb(56 189 248);
-overflow: scroll;
-scrollbar-width: none;
+.sider {
+  border-right: 1px solid rgb(56 189 248);
+  overflow: scroll;
+  scrollbar-width: none;
+  z-index: 1;
+  height: 1200px;
 }
 
 .sider::-webkit-scrollbar {
-display: none;
+  display: none;
 }
+
 .sider::-webkit-scrollbar {
-display: none;
+  display: none;
 }
-.header{
-   border-bottom: 2px solid rgb(56 189 248);
+
+.header {
+  border-bottom: 2px solid rgb(56 189 248);
 }
-/* rgb(56 189 248) */
+
 .App-scroll {
-   overflow: scroll;
-   scrollbar-width: none;
- }
- 
- .App-scroll::-webkit-scrollbar {
-   display: none;
- }
- .App-scroll::-webkit-scrollbar {
-   display: none;
- }
+  overflow: scroll;
+  scrollbar-width: none;
+}
+
+.App-scroll::-webkit-scrollbar {
+  display: none;
+}
+.App-scroll::-webkit-scrollbar {
+  display: none;
+}

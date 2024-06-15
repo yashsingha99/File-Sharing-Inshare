@@ -77,7 +77,7 @@ function Files() {
 
   if (!isUploadFile)
     return (
-      <div className="w-full mt-28 ml-28 h-full flex flex-col items-center justify-center p-4">
+      <div className=" fixed index w-full ml-20 h-full flex flex-col items-center justify-center p-4">
         <p className="text-3xl md:text-5xl text-center font-extrabold text-cyan-900 mb-4">
           Share your files
         </p>
@@ -105,15 +105,23 @@ function Files() {
                 </div>
               </div>
             </div>
+            <div className="" >
             <button
               onClick={() => {
                 handleClick();
                 setIsShare(true);
               }}
-              className="px-4 py-2 bg-green-500 hover:bg-green-700 text-white rounded-lg transition-colors duration-300"
+              className="px-8 mx-4 py-2 bg-green-500 hover:bg-green-700 text-white rounded transition-colors duration-300"
             >
               Share File
             </button>
+            <button
+              onClick={() => navigator('/app/convert-file')}
+              className="px-8 mx-4 py-2 bg-green-500 hover:bg-green-700 text-white rounded transition-colors duration-300"
+            >
+              Convert File
+            </button>
+            </div>
           </>
         )}{" "}
         {file && isShare && (

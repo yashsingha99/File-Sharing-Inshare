@@ -5,7 +5,7 @@ import Premium from './Premium'
 
 function Dashoard() {
   return (
-    <div className='bg-gray-100  flex h-full w-full'>
+    <div style={{height:"100vh"}} className='bg-gray-100  flex h-full w-full'>
     <Sider />
     <Outlet />
 

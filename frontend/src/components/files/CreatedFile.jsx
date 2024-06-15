@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useUser } from "@clerk/clerk-react";
 import axios from "axios";
 import { fetchFile } from "../../api/api";
+import FileDetect from "./FileDetect";
 function CreatedFile() {
   const user = useUser();
+  const navigate = useNavigate()
   const location = useLocation().pathname.split("/");
   const [fileData, serFileData] = useState();
   const fileId = location[location.length - 1];
@@ -24,6 +26,7 @@ function CreatedFile() {
     if (fileData.data.respond.password === password) setChecked(true);
     else alert("password mismatched");
     setPassword("")
+    window.location.replace(fileData.data.respond.path)
   };
 
   if (fileData)
@@ -48,8 +51,11 @@ function CreatedFile() {
               <div className="bg-blue-100"></div>
             </div>
           </div>
+          // <FileDetect  fileUrl={fileData.data.respond.path}  />
         )}
       </>
     );
 }
 export default CreatedFile;
+
+
