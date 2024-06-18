@@ -13,13 +13,13 @@ function Premium() {
   };
 
   return (
-    <section className="flex mt-28 ml-28 flex flex-col justify-center items-center w-5/6 text-gray-600 body-font ">
-      <div className="w-full px-5">
-        <div className="flex flex-col text-center w-full mb-20">
+    <section className="flex mt-32 ml-32 md:mt-12 md:ml-28 flex flex-col justify-center h-full items-center w-5/6 text-gray-600 body-font ">
+      <div className="md:w-full flex flex-col items-center px-5">
+        <div className="flex flex-col text-center md:w-1/2 mb-20">
           <h1 className="sm:text-4xl text-3xl font-medium title-font mb-2 text-gray-900">
             Pricing
           </h1>
-          <div className="flex mx-auto border-2 border-indigo-500 rounded overflow-hidden">
+          <div className="flex w-full  mx-auto border-2 border-indigo-500 rounded overflow-hidden">
             <button
               onClick={() => setIsMonthly((p) => true)}
               className={`py-1 px-4 focus:outline-none ${

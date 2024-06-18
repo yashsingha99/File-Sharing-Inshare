@@ -12,6 +12,7 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import "./file.css";
 import CreatedFile from "./CreatedFile";
 import DoneIcon from '@mui/icons-material/Done';
+import filesrc from "../../images/file.png"
 
 function Files() {
   const [url, setUrl] = useState();
@@ -26,7 +27,7 @@ function Files() {
   const [isCopied, setIsCopied] = useState(false);
   const user = useUser();
   const path = "http://localhost:5173";
-
+ console.log(fileType);
   const uploadFile = async (snapshot, downloadURL) => {
     const data = { snapshot, downloadURL, user };
     const res = await addFile(data);
@@ -51,6 +52,7 @@ function Files() {
       },[3000])
     setIsCopied(true)
   };
+
   const handleClick = () => {
     const imgRef = ref(storage, `files/${v4()}`);
     const uploadTask = uploadBytesResumable(imgRef, file[0], file[0].type);
@@ -78,15 +80,15 @@ function Files() {
   if (!isUploadFile)
     return (
       <div className=" fixed index w-full ml-20 h-full flex flex-col items-center justify-center p-4">
-        <p className="text-3xl md:text-5xl text-center font-extrabold text-cyan-900 mb-4">
+        <p className="text-2xl md:text-5xl text-center font-extrabold text-cyan-900 mb-4">
           Share your files
         </p>
-        <div className="w-full md:w-2/3 h-1/2 flex justify-center">
+        <div className="w-1/3 md:w-2/3 h-1/2 flex justify-center">
           <FileDrop onDrop={handleDrop} />
         </div>
         {file && !isShare && (
           <>
-            <div className="p-4 rounded-lg   overflow-y-auto w-full md:w-2/3 flex justify-center flex-col items-center gap-4 mt-4">
+            <div className="p-4 rounded-lg   overflow-y-auto w-2/3 flex justify-center flex-col items-center gap-4 mt-4">
               <div className="w-full flex shadow-lg flex-row  items-center p-2 bg-blue-200 rounded-lg shadow-md hover:shadow-lg duration-300 ease-in-out">
                 <div className="flex-1 p-2 text-left">{file[0].name}</div>
                 <div className="flex-1 p-2 text-left">
@@ -115,12 +117,6 @@ function Files() {
             >
               Share File
             </button>
-            <button
-              onClick={() => navigator('/app/convert-file')}
-              className="px-8 mx-4 py-2 bg-green-500 hover:bg-green-700 text-white rounded transition-colors duration-300"
-            >
-              Convert File
-            </button>
             </div>
           </>
         )}{" "}
@@ -146,23 +142,24 @@ function Files() {
   else
     return (
       <>
-        <section className=" container text-gray-600 w-full body-font relative">
+        <section className=" container md:ml-40 lg:ml-60  md:mt-24 text-gray-600 w-4/5 flex justify-end body-font relative">
           <div
             onClick={() => {
               setIsUploadFile(false);
             }}
-            className=" m-4 cursor-pointer flex items-center justify-center border w-10 h-10 "
+            className=" m-4 cursor-pointer flex items-center hover:text-red-600 justify-center border w-8 h-8"
           >
             <ArrowBackIcon />
           </div>
-          <div className="container w-full px-10   flex sm:flex-nowrap flex-wrap">
-            <div className=" lg:w-2/5 lg:h-2/5  md:w-1/2 md:h-1/2 bg-gray-300 rounded-lg overflow-hidden sm:mr-10 p-10 flex items-end justify-start relative">
-              {fileType !== "video/mp4" && (
-                <img className="w-full h-full" src={url} />
+          <div className="container w-full  px-8 flex flex-wrap">
+            <div className=" lg:w-1/2 lg:h-full mb-8 h-full md:w-1/2 md:h-1/2 bg-gray-300 mx-auto rounded-lg overflow-hidden sm:mr-10 p-8 flex items-end justify-start relative">
+              {fileType !== "video/mp4" && fileType !== "application/pdf"  && (
+                <img className="w-full h-full" src={(fileType === 'image/jpeg' || fileType === 'image/jpg' ||  fileType === 'image/png' || fileType === 'image/gif' ? url : filesrc)} alt="" />
               )}
               {fileType === "video/mp4" && <video src={url} controls className="w-full h-full" />}
+              {fileType === "application/pdf" && <iframe src={url} className="h-full w-full"></iframe>}
             </div>
-            <div className="lg:w-2/5 bg-blue-300 rounded text-blue-600 lg:h-2/5 p-8  md:w-1/2 md:h-1/2 flex flex-col md:ml-auto w-full md:py-8 mt-8 md:mt-0">
+            <div className="lg:w-1/2 sm:w-1/2 bg-blue-300 rounded text-blue-600 p-8 md:h-1/2  lg:h-2/3 flex flex-col md:mx-auto w-full md:py-8 mt-8 md:mt-0">
               <div className="relative mb-4">
                 <label htmlFor="name" className="leading-7 text-sm">
                   URL

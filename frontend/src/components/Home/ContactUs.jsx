@@ -6,6 +6,7 @@ import phoneAnimation from './phone.json';
 import Swal from 'sweetalert2';
 import CallIcon from '@mui/icons-material/Call';
 import EmailIcon from '@mui/icons-material/Email';
+import "../../App.css"
 const ContactUs = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -48,14 +49,14 @@ const ContactUs = () => {
 
   return (
     <>
-    <div className="container mx-auto p-8">
-      <div className="text-center mb-12">
-        <Bounce>
-          <h1 className="text-4xl font-bold mb-4">Contact Us</h1>
-        </Bounce>
-        <Fade>
+    <div className=" d-index container mx-auto p-8">
+      <div className=" d-index text-center mb-12">
+        {/* <Bounce> */}
+          <h1 className=" d-index text-4xl font-bold mb-4">Contact Us</h1>
+        {/* </Bounce> */}
+        {/* <Fade> */}
           <p className="text-lg mb-8">Feel free to reach out to us for any inquiries or feedback.</p>
-        </Fade>
+        {/* </Fade> */}
       </div>
       <div className="flex flex-wrap justify-around mb-12">
         <div className="w-full sm:w-1/2 p-4 flex flex-col items-center">

@@ -23,5 +23,9 @@
   border: 2px solid rgb(14 116 144);
 }
 .index{
-  z-index: 10;
+  z-index: 1;
+}
+
+.d-index{
+  z-index: -1;
 }

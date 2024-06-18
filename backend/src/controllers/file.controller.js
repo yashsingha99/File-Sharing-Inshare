@@ -24,12 +24,15 @@ const addFile = async (req, res) => {
       size: snapshot.fileSize,
       sender: checkUser._id,
     });
-    const upadatedUser = await User.findByIdAndUpdate(
+
+    const updatedUser = await User.findByIdAndUpdate(
       checkUser._id,
       {
         $addToSet: { files: newFile },
-        $inc: { fileCount: 1 },
-        $inc: { totalStorage: snapshot.fileSize / 1000000 },
+        $inc: { 
+          fileCount: 1,
+          totalStorage: snapshot.fileSize / 1000000 
+        }
       },
       {
         new: true,

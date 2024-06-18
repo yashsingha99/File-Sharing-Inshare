@@ -72,8 +72,8 @@ function Navbar() {
           className={`flex relative w-full justify-between title-font font-medium items-center text-gray-900 mb-4 md:mb-0`}
         >
           <div className="flex cursor-pointer title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
               fill="none"
               stroke="currentColor"
               strokeLinecap="round"

@@ -28,11 +28,11 @@ function About() {
 
   return (
     <>
-    <div className="container mx-auto p-8">
-      <div className="text-center mb-12">
-      <Bounce>
-        <h1 className="text-4xl font-bold mb-4">About Us</h1>
-        </Bounce>
+    <div className=" d-index container mx-auto p-8">
+      <div className=" d-index text-center mb-12">
+      {/* <Bounce> */}
+        <h1 className=" d-index text-4xl font-bold mb-4">About Us</h1>
+        {/* </Bounce> */}
         <p className="text-lg mb-8">We are a dedicated team committed to providing the best services for our customers. Our mission is to deliver high-quality products that meet your needs.</p>
       </div>
       <div className="flex sm:flex-wrap justify-around mb-12">

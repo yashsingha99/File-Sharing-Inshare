@@ -20,7 +20,7 @@ const FileDrop = ({ onDrop }) => {
       {
         isDragActive ?
           <p className="text-lg font-semibold text-blue-700">Drop the files here ...</p> :
-          <p className="text-lg  text-center font-semibold text-blue-700">
+          <p className="md:text-lg text-sm text-center font-semibold text-blue-700">
             Drag and drop your site output folder here, or 
             <span className="text-blue-500 underline ml-1">browse to upload</span>
           </p>
