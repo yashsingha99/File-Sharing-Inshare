@@ -11,7 +11,7 @@ function Home() {
       <div className="flex h-full flex-col  justify-center items-center  w-full mt-20 px-4 sm:px-6 lg:px-8">
         <div className="w-full h-full max-w-4xl">
           <div className="flex flex-col justify-center items-center gap-6 text-center">
-            <h1 className="text-cyan-900 text-4xl sm:text-4xl lg:text-5xl font-extrabold">
+            <h1 className=" dark:text-cyan-900 text-white text-4xl sm:text-4xl lg:text-5xl font-extrabold">
               The Power of Seamless Sharing
               <div className="text-cyan-900 text-2xl sm:text-3xl font-bold mt-2">
                 One Platform, Infinite Sharing

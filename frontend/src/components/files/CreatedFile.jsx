@@ -28,30 +28,8 @@ function CreatedFile() {
     window.location.replace(fileData.data.respond.path);
   };
 
-  // if (fileData)
   return (
     <>
-      {/* <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button onClick={ckeckPassword}>button</button>
-        {checked && (
-          <div className="w-full h-full">
-            <div className="flex items-center w-full">
-              <img
-                src={fileData.data.respond.path}
-                className="h-1/6 w-1/3"
-                alt="logo"
-              />
-            </div>
-            <div className="">
-              <div className="bg-blue-100"></div>
-            </div>
-          </div>
-        )} */}
-      {/* nmnm */}
       <div className="  w-full bg-blue-100 h-screen flex items-center justify-center">
         <div className="w-1/3 file h-3/4 shadow-xl mt-8 rounded flex flex-col justify-evenly  bg-blue-300">
           <div className="w-full flex justify-center" >
@@ -60,6 +38,7 @@ function CreatedFile() {
           <div className="w-full h-1/6 flex-col flex gap-8 items-center justify-center">
             <input 
             type="text" 
+            placeholder="paassword"
             className="shadow-inset bg-blue-100 outline-none rounded py-2 px-2 w-1/2" 
             value={password}
             onChange={(e) => setPassword(e.target.value)}

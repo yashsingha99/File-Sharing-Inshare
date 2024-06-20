@@ -43,6 +43,7 @@ function Files() {
   const handleDrop = (acceptedFiles) => {
     setIsShare(false);
     setFile(acceptedFiles);
+    console.log(acceptedFiles);
   };
   
   const handleCopyClick = () => {
@@ -63,10 +64,10 @@ function Files() {
       setFileType(snapshot.metadata.contentType);
       if (progress === 100) {
         const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-
+        
         setUrl(downloadURL);
         uploadFile(
-          { ...snapshot, fileSize: file[0].size, fileName: file[0].name },
+          { ...snapshot, fileSize: file[0].size, fileName: file[0].name, type : file[0].type },
           downloadURL
         );
         setIsUploadFile(true);
@@ -79,9 +80,9 @@ function Files() {
 
   if (!isUploadFile)
     return (
-      <div className=" fixed index w-full ml-20 h-full flex flex-col items-center justify-center p-4">
-        <p className="text-2xl md:text-5xl text-center font-extrabold text-cyan-900 mb-4">
-          Share your files
+      <div className=" index w-full ml-20 h-full flex flex-col items-center  p-4">
+        <p className="text-xl md:text-5xl text-center font-bold text-cyan-900 mb-4">
+          Share your files today;
         </p>
         <div className="w-1/3 md:w-2/3 h-1/2 flex justify-center">
           <FileDrop onDrop={handleDrop} />

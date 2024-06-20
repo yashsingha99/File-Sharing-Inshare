@@ -10,6 +10,11 @@ const fileModel = mongoose.Schema(
       type: String,
       required : true
     },
+    type:{
+      type:String,
+      required : true,
+      default: "image"
+    },
     status : {
       type : Boolean,
       default : true

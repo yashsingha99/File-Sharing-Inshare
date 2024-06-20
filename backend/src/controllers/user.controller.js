@@ -89,7 +89,9 @@ try {
 
 };
 
-const updateUser = async (req, res) => {};
+const updateUser = async (req, res) => {
+  const{user} = req.body
+ };
 
 
 

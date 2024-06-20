@@ -23,6 +23,7 @@ const addFile = async (req, res) => {
       path: downloadURL,
       size: snapshot.fileSize,
       sender: checkUser._id,
+      type : snapshot.type
     });
 
     const updatedUser = await User.findByIdAndUpdate(
@@ -39,7 +40,7 @@ const addFile = async (req, res) => {
       }
     );
     res.status(200).json({
-      data: { newFile, upadatedUser },
+      data: { newFile, updatedUser },
       message: "successfully File created",
     });
   } catch (error) {
