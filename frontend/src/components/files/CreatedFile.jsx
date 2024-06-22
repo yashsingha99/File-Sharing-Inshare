@@ -31,7 +31,7 @@ function CreatedFile() {
   return (
     <>
       <div className="  w-full bg-blue-100 h-screen flex items-center justify-center">
-        <div className="w-1/3 file h-3/4 shadow-xl mt-8 rounded flex flex-col justify-evenly  bg-blue-300">
+        <div className="md:w-1/3 w-2/3 file h-3/4 shadow-xl mt-8 rounded flex flex-col justify-evenly  bg-blue-300">
           <div className="w-full flex justify-center" >
             <img className="  h-4/5 w-1/2" src={file} alt="" />
           </div>

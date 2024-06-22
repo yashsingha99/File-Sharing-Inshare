@@ -8,7 +8,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import "tailwindcss/tailwind.css";
 import filesrc from "../../images/file.png";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Container from "../Container/Container";
 import { AnimatePresence, motion } from "framer-motion"
 const MySwal = withReactContent(Swal);
@@ -18,14 +18,14 @@ function History() {
   const [allFile, setAllFile] = useState([]);
   const [hover, setHover] = useState(null);
   const [selectedId, setSelectedId] = useState(null)
-
+  const location = useLocation()
   useEffect(() => {
     const fetch = async () => {
       const res = await userFiles(user);
       setAllFile(res.data.data);
     };
     user && fetch();
-  }, [user]);
+  }, [user, location]);
 
   const fetch = async () => {
     const res = await userFiles(user);
