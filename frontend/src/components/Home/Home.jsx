@@ -8,8 +8,8 @@ function Home() {
 
   return (
     <>
-      <div className="flex h-full flex-col  justify-center items-center  w-full mt-20 px-4 sm:px-6 lg:px-8">
-        <div className="w-full h-full max-w-4xl">
+      <div className="flex h-full flex-col gap-40 items-center content-between  w-full mt-20 ">
+        <div className="w-full h-5/6 max-w-4xl">
           <div className="flex flex-col justify-center items-center gap-6 text-center">
             <h1 className=" dark:text-cyan-900 text-white text-4xl sm:text-4xl lg:text-5xl font-extrabold">
               The Power of Seamless Sharing
@@ -54,11 +54,11 @@ function Home() {
             </div>
           </div>
         </div>
-      </div>
-      <div className="w-full h-full mt-28 items-end">
+      <div className="w-full h-1/5 items-end">
         <footer className="bg-gray-800 w-full py-4 text-white text-center">
           <p>&copy; 2024 File Sharing Service. All rights reserved.</p>
         </footer>
+      </div>
       </div>
     </>
   );

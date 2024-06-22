@@ -27,12 +27,12 @@ import PortableWifiOffIcon from "@mui/icons-material/PortableWifiOff";
 import { ThemeProvider } from "./contexts/theme";
 import ThemeBtn from "./Theme/ThemeBtn";
 import Card from "./Theme/Card";
-
+import { useUser } from "@clerk/clerk-react";
 const MySwal = withReactContent(Swal);
 function App() {
   const [offLine, setOffLine] = useState(false);
   const [themeMode, setThemeMode] = useState("light");
-
+ const user = useUser()
   const lightTheme = () => {
     setThemeMode("light");
   };
@@ -85,7 +85,7 @@ function App() {
     <>
         <div className=" App-scroll h-full w-full">
       <ThemeProvider value={{ themeMode, lightTheme, darkTheme }}>
-          <ThemeBtn />
+          {/* <ThemeBtn /> */}
       </ThemeProvider>
       
           {location !== "app"

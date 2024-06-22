@@ -11,8 +11,8 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import "./file.css";
 import CreatedFile from "./CreatedFile";
-import DoneIcon from '@mui/icons-material/Done';
-import filesrc from "../../images/file.png"
+import DoneIcon from "@mui/icons-material/Done";
+import filesrc from "../../images/file.png";
 
 function Files() {
   const [url, setUrl] = useState();
@@ -25,19 +25,41 @@ function Files() {
   const [fileType, setFileType] = useState("");
   const [fileId, setFileId] = useState("");
   const [isCopied, setIsCopied] = useState(false);
-  const user = useUser();
+  const {user} = useUser();
   const path = "http://localhost:5173";
- console.log(fileType);
+  console.log(fileType);
+
+  const [pageSize, setPageSize] = useState({
+    width: window.innerWidth,
+    hight: window.innerHeight,
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setPageSize({
+        width: window.innerWidth,
+        hight: window.innerHeight,
+      });
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   const uploadFile = async (snapshot, downloadURL) => {
-    const data = { snapshot, downloadURL, user };
-    const res = await addFile(data);
-    setFileId(res.data.data.newFile._id);
-  };
+    if(user){
+     const data = { snapshot, downloadURL, user };
+     const res = await addFile(data);
+     setFileId(res.data.data.newFile._id);
+    } else 
+     alert("user doesn't exist")
+  }; 
 
   const updatePassword = async () => {
     const data = { password, fileId };
     const res = await upadatePassword(data);
-    setPassword("")
+    setPassword("");
   };
 
   const handleDrop = (acceptedFiles) => {
@@ -45,105 +67,123 @@ function Files() {
     setFile(acceptedFiles);
     console.log(acceptedFiles);
   };
-  
+
   const handleCopyClick = () => {
-    navigator.clipboard.writeText(`${path}/CreatedFile/${fileId}`)
+    navigator.clipboard.writeText(`${path}/CreatedFile/${fileId}`);
     setTimeout(() => {
-      setIsCopied(false)
-      },[3000])
-    setIsCopied(true)
+      setIsCopied(false);
+    }, [3000]);
+    setIsCopied(true);
   };
 
   const handleClick = () => {
-    const imgRef = ref(storage, `files/${v4()}`);
-    const uploadTask = uploadBytesResumable(imgRef, file[0], file[0].type);
-
-    uploadTask.on("state_changed", async (snapshot) => {
-      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      setProgress(progress.toFixed(2));
-      setFileType(snapshot.metadata.contentType);
-      if (progress === 100) {
-        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-        
-        setUrl(downloadURL);
-        uploadFile(
-          { ...snapshot, fileSize: file[0].size, fileName: file[0].name, type : file[0].type },
-          downloadURL
-        );
-        setIsUploadFile(true);
-        setFile("");
-        setProgress(0);
-        setIsShare(false);
-      }
-    });
+   try {
+     const imgRef = ref(storage, `files/${v4()}`);
+     const uploadTask = uploadBytesResumable(imgRef, file[0], file[0].type);
+ 
+     uploadTask.on("state_changed", async (snapshot) => {
+       const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+       setProgress(progress.toFixed(2));
+       setFileType(snapshot.metadata.contentType);
+       if (progress === 100) {
+         const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+ 
+         setUrl(downloadURL);
+         uploadFile(
+           {
+             ...snapshot,
+             fileSize: file[0].size,
+             fileName: file[0].name,
+             type: file[0].type,
+           },
+           downloadURL
+         );
+         setIsUploadFile(true);
+         setFile("");
+         setProgress(0);
+         setIsShare(false);
+       }
+     });
+   } catch (error) {
+    alert("This is not support. please another file ")
+    setIsUploadFile(true);
+    setFile("");
+    setProgress(0);
+    setIsShare(false);
+   }
   };
 
   if (!isUploadFile)
     return (
-      <div className=" index w-full ml-20 h-full flex flex-col items-center  p-4">
-        <p className="text-xl md:text-5xl text-center font-bold text-cyan-900 mb-4">
-          Share your files today;
-        </p>
-        <div className="w-1/3 md:w-2/3 h-1/2 flex justify-center">
-          <FileDrop onDrop={handleDrop} />
-        </div>
-        {file && !isShare && (
-          <>
-            <div className="p-4 rounded-lg   overflow-y-auto w-2/3 flex justify-center flex-col items-center gap-4 mt-4">
-              <div className="w-full flex shadow-lg flex-row  items-center p-2 bg-blue-200 rounded-lg shadow-md hover:shadow-lg duration-300 ease-in-out">
-                <div className="flex-1 p-2 text-left">{file[0].name}</div>
-                <div className="flex-1 p-2 text-left">
-                  {(file[0].size / (1024 * 1024)).toFixed(2)} MB
-                </div>
-                <div className="flex-1 p-2 text-left">{file[0].type}</div>
-                <div className="flex gap-2">
-                  <div
-                    onClick={() => {
-                      setFile("");
-                    }}
-                    className="hover:text-red-600 text-blue-700  transition-colors duration-300"
-                  >
-                    <CloseIcon />
+      <section className="w-full text-gray-600 mt-8 justify-start items-center ">
+        <div className=" py-24  flex  flex-col">
+          <div className=" index w-full ml-20 h-full flex flex-col items-center ">
+            <p className="text-xl md:text-5xl text-center font-bold text-cyan-900 mb-4">
+              Share your files;
+            </p>
+            <div className="w-full  h-1/2 flex justify-center">
+              <FileDrop onDrop={handleDrop} />
+            </div>
+            {file && !isShare && (
+              <>
+                <div className="p-4 rounded-lg   overflow-y-auto w-2/3 flex justify-center flex-col items-center gap-4 mt-4">
+                  <div className="w-full flex shadow-lg flex-row  items-center p-2 bg-blue-200 rounded-lg shadow-md hover:shadow-lg duration-300 ease-in-out">
+                    <div className="flex-1 p-2 text-left">{file[0].name}</div>
+                    <div className="flex-1 p-2 text-left">
+                      {(file[0].size / (1024 * 1024)).toFixed(2)} MB
+                    </div>
+                    <div className="flex-1 p-2 text-left">{file[0].type}</div>
+                    <div className="flex gap-2">
+                      <div
+                        onClick={() => {
+                          setFile("");
+                        }}
+                        className="hover:text-red-600 text-blue-700  transition-colors duration-300"
+                      >
+                        <CloseIcon />
+                      </div>
+                    </div>
                   </div>
                 </div>
+                <div className="">
+                  <button
+                    onClick={() => {
+                      handleClick();
+                      setIsShare(true);
+                    }}
+                    className="px-8 mx-4 py-2 bg-green-500 hover:bg-green-700 text-white rounded transition-colors duration-300"
+                  >
+                    Share File
+                  </button>
+                </div>
+              </>
+            )}{" "}
+            {file && isShare && (
+              <div className="w-1/2 pt-1 mx-auto mt-4">
+                <div className="flex mx-auto w-1/6 mb-2 items-center justify-between">
+                  <div>
+                    <span className="text-lg font-semibold inline-block py-2 px-3 uppercase rounded-full text-blue-600 bg-blue-200">
+                      {progress}%
+                    </span>
+                  </div>
+                </div>
+                <div className="overflow-hidden w-full   h-2 mb-4 text-xs flex rounded bg-blue-200">
+                  <div
+                    style={{ width: `${progress}%` }}
+                    className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500 transition-all duration-500 ease-in-out"
+                  ></div>
+                </div>
               </div>
-            </div>
-            <div className="" >
-            <button
-              onClick={() => {
-                handleClick();
-                setIsShare(true);
-              }}
-              className="px-8 mx-4 py-2 bg-green-500 hover:bg-green-700 text-white rounded transition-colors duration-300"
-            >
-              Share File
-            </button>
-            </div>
-          </>
-        )}{" "}
-        {file && isShare && (
-          <div className="w-1/2 pt-1 mx-auto mt-4">
-            <div className="flex mx-auto w-1/6 mb-2 items-center justify-between">
-              <div>
-                <span className="text-lg font-semibold inline-block py-2 px-3 uppercase rounded-full text-blue-600 bg-blue-200">
-                  {progress}%
-                </span>
-              </div>
-            </div>
-            <div className="overflow-hidden w-full   h-2 mb-4 text-xs flex rounded bg-blue-200">
-              <div
-                style={{ width: `${progress}%` }}
-                className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500 transition-all duration-500 ease-in-out"
-              ></div>
-            </div>
+            )}
           </div>
-        )}
-      </div>
+        </div>
+      </section>
+      //  </div>
     );
   else
     return (
       <>
-        <section className=" container md:ml-40 lg:ml-60  md:mt-24 text-gray-600 w-4/5 flex justify-end body-font relative">
+        <section className={`md:mt-24 ${window.innerWidth < 1030 ? "mt-24" : ""} text-gray-600 w-full flex  justify-center body-font`}>
           <div
             onClick={() => {
               setIsUploadFile(false);
@@ -152,16 +192,33 @@ function Files() {
           >
             <ArrowBackIcon />
           </div>
-          <div className="container w-full  px-8 flex flex-wrap">
-            <div className=" lg:w-1/2 lg:h-full mb-8 h-full md:w-1/2 md:h-1/2 bg-gray-300 mx-auto rounded-lg overflow-hidden sm:mr-10 p-8 flex items-end justify-start relative">
-              {fileType !== "video/mp4" && fileType !== "application/pdf"  && (
-                <img className="w-full h-full" src={(fileType === 'image/jpeg' || fileType === 'image/jpg' ||  fileType === 'image/png' || fileType === 'image/gif' ? url : filesrc)} alt="" />
+          <div className={`container   ${window.innerWidth < 1030 ? " flex-wrap w-1/2" : ""} w-full flex px-8`}>
+            <div className=" bg-gray-300  md:h-2/3 md:w-1/3  rounded-lg overflow-hidden sm:mr-10 p-8 flex items-start justify-center ">
+              {fileType !== "video/mp4" && fileType !== "application/pdf" && (
+                <img
+                  className="w-full h-full"
+                  src={
+                    fileType === "image/jpeg" ||
+                    fileType === "image/jpg" ||
+                    fileType === "image/png" ||
+                    fileType === "image/gif"
+                      ? url
+                      : filesrc
+                  }
+                  alt=""
+                />
               )}
-              {fileType === "video/mp4" && <video src={url} controls className="w-full h-full" />}
-              {fileType === "application/pdf" && <iframe src={url} className="h-full w-full"></iframe>}
+
+              {fileType === "video/mp4" && (
+                <video src={url} controls className="w-full h-full" />
+              )}
+
+              {fileType === "application/pdf" && (
+                <iframe src={url} className="h-full w-full"></iframe>
+              )}
             </div>
-            <div className="lg:w-1/2 sm:w-1/2 bg-blue-300 rounded text-blue-600 p-8 md:h-1/2  lg:h-2/3 flex flex-col md:mx-auto w-full md:py-8 mt-8 md:mt-0">
-              <div className="relative mb-4">
+            <div className="md:w-1/3 md:h-2/3  bg-blue-300 rounded text-blue-600 p-8 flex flex-col md:mx-auto  md:py-8 mt-8 md:mt-0">
+              <div className="mb-4">
                 <label htmlFor="name" className="leading-7 text-sm">
                   URL
                 </label>
@@ -172,11 +229,11 @@ function Files() {
                     readOnly
                   />
                   <div onClick={handleCopyClick} className="flex justify-end">
-                   {isCopied ? <DoneIcon /> : <ContentCopyIcon />}
+                    {isCopied ? <DoneIcon /> : <ContentCopyIcon />}
                   </div>
                 </div>
               </div>
-              <div className="relative mb-4">
+              <div className="mb-4">
                 <label htmlFor="password" className="leading-7 text-sm">
                   Password
                 </label>
@@ -197,7 +254,7 @@ function Files() {
                   </button>
                 </div>
               </div>
-              <div className="relative mb-4">
+              <div className="mb-4">
                 <label htmlFor="email" className="leading-7 text-sm">
                   Reciver Email
                 </label>

@@ -10,12 +10,14 @@ import "tailwindcss/tailwind.css";
 import filesrc from "../../images/file.png";
 import { Link } from "react-router-dom";
 import Container from "../Container/Container";
+import { AnimatePresence, motion } from "framer-motion"
 const MySwal = withReactContent(Swal);
 
 function History() {
   const { user } = useUser();
   const [allFile, setAllFile] = useState([]);
   const [hover, setHover] = useState(null);
+  const [selectedId, setSelectedId] = useState(null)
 
   useEffect(() => {
     const fetch = async () => {
@@ -37,21 +39,20 @@ function History() {
   const handleDelete = (fileId) => {
     MySwal.fire({
       title: "Are you sure?",
-      text: "Do you really want to delete this item?",
+      text: "Do you really want to buy this plan?",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "No, keep it",
+      confirmButtonText: "Proceed",
+      cancelButtonText: "Cancle",
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
     }).then(async (result) => {
       if (result.isConfirmed) {
         const res = await updateStatus(fileId);
-        console.log("Deleted!");
-        MySwal.fire("Deleted!", "Your item has been deleted.", "success");
+        MySwal.fire("Success", "payment succesfull.", "success");
         fetch();
       } else if (result.dismiss === Swal.DismissReason.cancel) {
-        MySwal.fire("Cancelled", "Your file is safe 🙂", "error");
+        MySwal.fire("Cancelled", "Your transaction failed", "error");
       }
     });
   };
@@ -70,24 +71,40 @@ function History() {
         </Container>
       </div>
     );
-    
+ const items = [
+  { 
+    subtitle : "aasadas",
+    title : "daasaa"
+  },
+  { 
+    subtitle : "aasadas",
+    title : "daasaa"
+  },
+  { 
+    subtitle : "aasadas",
+    title : "daasaa"
+  },
+  { 
+    subtitle : "aasadas",
+    title : "daasaa"
+  },
+ ]
   return (
-    <section className=" w-5/6 text-gray-600 mx-auto ">
-      <div className=" px-5 py-24  flex  flex-col">
+    <section className=" w-full text-gray-600 flex justify-center">
+      <div className=" px-5 py-24 w-5/6  flex  flex-col">
         {allFile.map((file, i) => {
           if (file.status === true)
             return (
               <div
                 key={i}
-                className="flex-shrink-0  mb-4 flex flex-wrap items-center justify-between   pr-4  border-gray-950 w-80 lg:w-full h-80 lg:h-40 m-2  bg-gray-100 rounded-xl shadow-2xl"
+                className="flex-shrink-0   mb-4 flex flex-wrap items-center justify-between pr-4 border-gray-950 w-full lg:w-full h-80 lg:h-40 m-2  bg-gray-100 rounded-xl shadow-2xl"
               >
-                <div className="flex mr-20 flex-col w-1/4 md:w-auto ">
-                  {/* <div className=""> */}
+                <div className="flex cursor-pointer mr-20 flex-col w-1/4 md:w-auto ">
                   {file.type !== "video/mp4" &&
                     file.type !== "application/pdf" && (
                       <img
                         onClick={() => handleOpen(file.path)}
-                        className="rounded-xl h-40 w-40"
+                        className="rounded-xl h-40 w-full lg:w-40"
                         src={
                           file.type === "image/jpeg" ||
                           file.type === "image/jpg" ||
@@ -111,333 +128,30 @@ function History() {
                       className="rounded-xl h-full w-full"
                     ></iframe>
                   )}
-                  {/* </div> */}
                 </div>
-                <div className="w-2/3 flex justify-around" >
+                <div className="w-2/3 flex justify-around">
                   <div className="md:text-lg text-center w-1/4 text-sm font-medium title-font text-gray-900">
-                  {(file.filename).substring(0, 6) + (file.filename).substring((file.filename).length - 5, (file.filename).length)}
+                    {file.filename.substring(0, 6) +
+                      file.filename.substring(
+                        file.filename.length - 5,
+                        file.filename.length
+                      )}
                     <div className="text-gray-400 text-center">
                       {(file.size / (1000 * 1000)).toFixed(2)} MB
                     </div>
                   </div>
-                  <span
+                  <button
                     onClick={() => handleOpen(file.path)}
-                    className=" relative cursor-pointer hover:text-blue-600 ml-4 flex items-start flex-col leading-none"
+                    className="hover:text-blue-600 ml-4 flex items-start flex-col leading-none"
                     onMouseEnter={() => setHover(i)}
                     onMouseLeave={() => setHover(null)}
                   >
                     <OpenInNewIcon />
-                 { hover === i && <span className=" text-sm absolute bottom-16 left-4 px-2 py-1 rounded-lg text-black bg-gray-300" >open</span>}
-                  </span>
-                  <button
-                    onClick={() => handleDelete(file._id)}
-                    className="ml-8 flex items-start flex-col leading-none hover:text-red-600 "
-                  >
-                    <DeleteForeverIcon />
-                  </button>
-                </div>
-              </div>
-            );
-        })}
-        {allFile.map((file, i) => {
-          if (file.status === true)
-            return (
-              <div
-                key={i}
-                className="flex-shrink-0  mb-4 flex flex-wrap items-center justify-between   pr-4  border-gray-950 w-80 lg:w-full h-80 lg:h-40 m-2  bg-gray-100 rounded-xl shadow-2xl"
-              >
-                <div className="flex mr-20 flex-col w-1/4 md:w-auto ">
-                  {/* <div className=""> */}
-                  {file.type !== "video/mp4" &&
-                    file.type !== "application/pdf" && (
-                      <img
-                        onClick={() => handleOpen(file.path)}
-                        className="rounded-xl h-40 w-40"
-                        src={
-                          file.type === "image/jpeg" ||
-                          file.type === "image/jpg" ||
-                          file.type === "image/png" ||
-                          file.type === "image/gif"
-                            ? file.path
-                            : filesrc
-                        }
-                        alt=""
-                      />
+                    {hover === i && (
+                      <span className=" text-sm absolute bottom-16 left-4 px-2 py-1 rounded-lg text-black bg-gray-300">
+                        open
+                      </span>
                     )}
-                  {file.type === "video/mp4" && (
-                    <video
-                      src={file.path}
-                      className="rounded-xl h-full w-full"
-                    />
-                  )}
-                  {file.type === "application/pdf" && (
-                    <iframe
-                      src={file.path}
-                      className="rounded-xl h-full w-full"
-                    ></iframe>
-                  )}
-                  {/* </div> */}
-                </div>
-                <div className="w-2/3 flex justify-around" >
-                  <div className="md:text-lg text-center w-1/4 text-sm font-medium title-font text-gray-900">
-                  {(file.filename).substring(0, 6) + (file.filename).substring((file.filename).length - 5, (file.filename).length)}
-                    <div className="text-gray-400 text-center">
-                      {(file.size / (1000 * 1000)).toFixed(2)} MB
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => handleOpen(file.path)}
-                    className=" hover:text-blue-600 ml-4 flex items-start flex-col leading-none"
-                  >
-                    <OpenInNewIcon />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(file._id)}
-                    className="ml-8 flex items-start flex-col leading-none hover:text-red-600 "
-                  >
-                    <DeleteForeverIcon />
-                  </button>
-                </div>
-              </div>
-            );
-        })}
-        {allFile.map((file, i) => {
-          if (file.status === true)
-            return (
-              <div
-                key={i}
-                className="flex-shrink-0  mb-4 flex flex-wrap items-center justify-between   pr-4  border-gray-950 w-80 lg:w-full h-80 lg:h-40 m-2  bg-gray-100 rounded-xl shadow-2xl"
-              >
-                <div className="flex mr-20 flex-col w-1/4 md:w-auto ">
-                  {/* <div className=""> */}
-                  {file.type !== "video/mp4" &&
-                    file.type !== "application/pdf" && (
-                      <img
-                        onClick={() => handleOpen(file.path)}
-                        className="rounded-xl h-40 w-40"
-                        src={
-                          file.type === "image/jpeg" ||
-                          file.type === "image/jpg" ||
-                          file.type === "image/png" ||
-                          file.type === "image/gif"
-                            ? file.path
-                            : filesrc
-                        }
-                        alt=""
-                      />
-                    )}
-                  {file.type === "video/mp4" && (
-                    <video
-                      src={file.path}
-                      className="rounded-xl h-full w-full"
-                    />
-                  )}
-                  {file.type === "application/pdf" && (
-                    <iframe
-                      src={file.path}
-                      className="rounded-xl h-full w-full"
-                    ></iframe>
-                  )}
-                  {/* </div> */}
-                </div>
-                <div className="w-2/3 flex justify-around" >
-                  <div className="md:text-lg text-center w-1/4 text-sm font-medium title-font text-gray-900">
-                  {(file.filename).substring(0, 6) + (file.filename).substring((file.filename).length - 5, (file.filename).length)}
-                    <div className="text-gray-400 text-center">
-                      {(file.size / (1000 * 1000)).toFixed(2)} MB
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => handleOpen(file.path)}
-                    className=" hover:text-blue-600 ml-4 flex items-start flex-col leading-none"
-                  >
-                    <OpenInNewIcon />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(file._id)}
-                    className="ml-8 flex items-start flex-col leading-none hover:text-red-600 "
-                  >
-                    <DeleteForeverIcon />
-                  </button>
-                </div>
-              </div>
-            );
-        })}
-        {allFile.map((file, i) => {
-          if (file.status === true)
-            return (
-              <div
-                key={i}
-                className="flex-shrink-0  mb-4 flex flex-wrap items-center justify-between   pr-4  border-gray-950 w-80 lg:w-full h-80 lg:h-40 m-2  bg-gray-100 rounded-xl shadow-2xl"
-              >
-                <div className="flex mr-20 flex-col w-1/4 md:w-auto ">
-                  {/* <div className=""> */}
-                  {file.type !== "video/mp4" &&
-                    file.type !== "application/pdf" && (
-                      <img
-                        onClick={() => handleOpen(file.path)}
-                        className="rounded-xl h-40 w-40"
-                        src={
-                          file.type === "image/jpeg" ||
-                          file.type === "image/jpg" ||
-                          file.type === "image/png" ||
-                          file.type === "image/gif"
-                            ? file.path
-                            : filesrc
-                        }
-                        alt=""
-                      />
-                    )}
-                  {file.type === "video/mp4" && (
-                    <video
-                      src={file.path}
-                      className="rounded-xl h-full w-full"
-                    />
-                  )}
-                  {file.type === "application/pdf" && (
-                    <iframe
-                      src={file.path}
-                      className="rounded-xl h-full w-full"
-                    ></iframe>
-                  )}
-                  {/* </div> */}
-                </div>
-                <div className="w-2/3 flex justify-around" >
-                  <div className="md:text-lg text-center w-1/4 text-sm font-medium title-font text-gray-900">
-                  {(file.filename).substring(0, 6) + (file.filename).substring((file.filename).length - 5, (file.filename).length)}
-                    <div className="text-gray-400 text-center">
-                      {(file.size / (1000 * 1000)).toFixed(2)} MB
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => handleOpen(file.path)}
-                    className=" hover:text-blue-600 ml-4 flex items-start flex-col leading-none"
-                  >
-                    <OpenInNewIcon />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(file._id)}
-                    className="ml-8 flex items-start flex-col leading-none hover:text-red-600 "
-                  >
-                    <DeleteForeverIcon />
-                  </button>
-                </div>
-              </div>
-            );
-        })}
-        {allFile.map((file, i) => {
-          if (file.status === true)
-            return (
-              <div
-                key={i}
-                className="flex-shrink-0  mb-4 flex flex-wrap items-center justify-between   pr-4  border-gray-950 w-80 lg:w-full h-80 lg:h-40 m-2  bg-gray-100 rounded-xl shadow-2xl"
-              >
-                <div className="flex mr-20 flex-col w-1/4 md:w-auto ">
-                  {/* <div className=""> */}
-                  {file.type !== "video/mp4" &&
-                    file.type !== "application/pdf" && (
-                      <img
-                        onClick={() => handleOpen(file.path)}
-                        className="rounded-xl h-40 w-40"
-                        src={
-                          file.type === "image/jpeg" ||
-                          file.type === "image/jpg" ||
-                          file.type === "image/png" ||
-                          file.type === "image/gif"
-                            ? file.path
-                            : filesrc
-                        }
-                        alt=""
-                      />
-                    )}
-                  {file.type === "video/mp4" && (
-                    <video
-                      src={file.path}
-                      className="rounded-xl h-full w-full"
-                    />
-                  )}
-                  {file.type === "application/pdf" && (
-                    <iframe
-                      src={file.path}
-                      className="rounded-xl h-full w-full"
-                    ></iframe>
-                  )}
-                  {/* </div> */}
-                </div>
-                <div className="w-2/3 flex justify-around" >
-                  <div className="md:text-lg text-center w-1/4 text-sm font-medium title-font text-gray-900">
-                  {(file.filename).substring(0, 6) + (file.filename).substring((file.filename).length - 5, (file.filename).length)}
-                    <div className="text-gray-400 text-center">
-                      {(file.size / (1000 * 1000)).toFixed(2)} MB
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => handleOpen(file.path)}
-                    className=" hover:text-blue-600 ml-4 flex items-start flex-col leading-none"
-                  >
-                    <OpenInNewIcon />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(file._id)}
-                    className="ml-8 flex items-start flex-col leading-none hover:text-red-600 "
-                  >
-                    <DeleteForeverIcon />
-                  </button>
-                </div>
-              </div>
-            );
-        })}
-        {allFile.map((file, i) => {
-          if (file.status === true)
-            return (
-              <div
-                key={i}
-                className="flex-shrink-0  mb-4 flex flex-wrap items-center justify-between   pr-4  border-gray-950 w-80 lg:w-full h-80 lg:h-40 m-2  bg-gray-100 rounded-xl shadow-2xl"
-              >
-                <div className="flex mr-20 flex-col w-1/4 md:w-auto ">
-                  {/* <div className=""> */}
-                  {file.type !== "video/mp4" &&
-                    file.type !== "application/pdf" && (
-                      <img
-                        onClick={() => handleOpen(file.path)}
-                        className="rounded-xl h-40 w-40"
-                        src={
-                          file.type === "image/jpeg" ||
-                          file.type === "image/jpg" ||
-                          file.type === "image/png" ||
-                          file.type === "image/gif"
-                            ? file.path
-                            : filesrc
-                        }
-                        alt=""
-                      />
-                    )}
-                  {file.type === "video/mp4" && (
-                    <video
-                      src={file.path}
-                      className="rounded-xl h-full w-full"
-                    />
-                  )}
-                  {file.type === "application/pdf" && (
-                    <iframe
-                      src={file.path}
-                      className="rounded-xl h-full w-full"
-                    ></iframe>
-                  )}
-                  {/* </div> */}
-                </div>
-                <div className="w-2/3 flex justify-around" >
-                  <div className="md:text-lg text-center w-1/4 text-sm font-medium title-font text-gray-900">
-                  {(file.filename).substring(0, 6) + (file.filename).substring((file.filename).length - 5, (file.filename).length)}
-                    <div className="text-gray-400 text-center">
-                      {(file.size / (1000 * 1000)).toFixed(2)} MB
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => handleOpen(file.path)}
-                    className=" hover:text-blue-600 ml-4 flex items-start flex-col leading-none"
-                  >
-                    <OpenInNewIcon />
                   </button>
                   <button
                     onClick={() => handleDelete(file._id)}
@@ -450,6 +164,21 @@ function History() {
             );
         })}
       </div>
+      {/* {items.map((item, i) => (
+        <motion.div layoutId={i} onClick={() => setSelectedId(item.id)}>
+          <motion.h5>{item.subtitle}</motion.h5>
+          <motion.h2>{item.title}</motion.h2>
+        </motion.div>
+      ))}
+      <AnimatePresence>
+        {selectedId && (
+          <motion.div layoutId={selectedId}>
+            <motion.h5>{items[selectedId].subtitle}</motion.h5>
+            <motion.h2>{items[selectedId].title}</motion.h2>
+            <motion.button onClick={() => setSelectedId(null)} />
+          </motion.div>
+        )}
+      </AnimatePresence> */}
     </section>
   );
 }

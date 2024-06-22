@@ -7,8 +7,8 @@ const addFile = async (req, res) => {
     const { user, snapshot, downloadURL } = req.body;
     if (!snapshot || !downloadURL || !user)
       return res.status(400).json({ message: "Insufficient data" });
-    const username = user.user.username;
-    const email = user.user.emailAddresses.emailAddress;
+    const username = user.username;
+    const email = user.emailAddresses.emailAddress;
 
     const checkUser = await User.findOne({
       $or: [{ email }, { username }],
