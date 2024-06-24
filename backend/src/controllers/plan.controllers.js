@@ -24,3 +24,22 @@ try {
     console.log("createPlan", error);
 }
 }
+
+const updatePlan = async (req, res) => {
+
+}
+
+const deletePlan = async (req, res) => {
+
+}
+
+const fetchAllPlans = async( req, res) => {
+
+}
+
+module.exports = {
+    createPlan,
+    updatePlan,
+    deletePlan,
+    fetchAllPlans
+}
