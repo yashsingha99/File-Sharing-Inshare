@@ -51,7 +51,17 @@ try {
 };
 
 const deletePlan = async (req, res) => {
-    
+  try {
+      const plan = req.body;
+      if(!plan)
+         return res.status(400).json({message : "insufficient data"})
+      const deletedPlan = await Plan.deleteOne({_id : plan._id})
+      if(!deletedPlan)
+         return res.status(400).json({message : "plan doesn't exist"})
+      res.status(200).json({deletedPlan, message : "sucessfully deleted"})
+  } catch (error) {
+      console.log("deletePlan", error);
+  }
 };
 
 const fetchAllPlans = async (req, res) => {};
