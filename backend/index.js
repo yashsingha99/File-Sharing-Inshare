@@ -1,6 +1,8 @@
 const {default: mongoose} = require("mongoose")
 const dotenv = require('dotenv')
 dotenv.config()
+
+
 const URI = process.env.URI
 const connectDb = async() => {
     try {
@@ -11,5 +13,7 @@ const connectDb = async() => {
     }
 }
 connectDb()
+
+
 const app = require("./app")
 app.listen(3000, console.log("server is running...."))

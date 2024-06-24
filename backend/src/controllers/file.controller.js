@@ -2,10 +2,12 @@ const User = require("../Model/user.model");
 const File = require("../Model/file.model");
 
 const addFile = async (req, res) => {
-  try {
+  try
+   {
     const { user, snapshot, downloadURL } = req.body;
     if (!snapshot || !downloadURL || !user)
       return res.status(400).json({ message: "Insufficient data" });
+
     const username = user.username;
     const email = user.emailAddresses.emailAddress;
 
@@ -38,10 +40,13 @@ const addFile = async (req, res) => {
         new: true,
       }
     );
+
     res.status(200).json({
       data: { newFile, updatedUser },
       message: "successfully File created",
     });
+
+    
   } catch (error) {
     console.log("addFile => ", error);
   }
@@ -50,10 +55,14 @@ const addFile = async (req, res) => {
 
 
 const updatePassword = async (req, res) => {
-  try {
+  try 
+  {
+
     const { fileId, password } = req.body;
     if (!fileId || !password)
       return res.status(400).json({ message: "Insufficient data" });
+
+
     const respond = await File.findByIdAndUpdate(
       fileId,
       {
@@ -66,6 +75,8 @@ const updatePassword = async (req, res) => {
 
     if (!respond) return res.status(400).json({ message: "File doesn't find" });
     res.status(200).json({ respond, message: "Successfully updated" });
+
+
   } catch (error) {
     console.log("updatePassword => ", error);
   }
@@ -74,11 +85,16 @@ const updatePassword = async (req, res) => {
 const fetchFile = async (req, res) => {
   try {
     const val = req.body;
-    console.log("body => ", val);
     if (!val) return res.status(400).json({ message: "Insufficient data" });
+
+
     const respond = await File.findById(val.id);
     if (!respond) return res.status(400).json({ message: "File doesn't find" });
+
+
     res.status(200).json({ respond });
+
+
   } catch (error) {
     console.log("fetchFile => ", error);
   }
@@ -88,12 +104,17 @@ const userFiles = async (req, res) => {
   try {
     const user = req.body;
     if (!user) return res.status(400).json({ message: "Insufficient data" });
+
     const email = user.emailAddresses[0].emailAddress;
     const username = user.username;
+
     const respond = await User.findOne({
       $or: [{ email, username }],
     }).populate("files");
+
     if (!respond) res.status(400).json({ message: "User doesn't exist" });
+
+
     const allFiles = respond.files;
     res
       .status(200)
@@ -101,6 +122,8 @@ const userFiles = async (req, res) => {
         data: allFiles,
         message: "Sucessfully fetched all user's files",
       });
+
+
   } catch (error) {
     console.log(error);
   }

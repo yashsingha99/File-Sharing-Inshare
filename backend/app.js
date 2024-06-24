@@ -20,7 +20,7 @@ app.use(
 const fileRouter = require('./src/routers/file.routes');
 const userRouter = require('./src/routers/user.routes');
 const planRouter = require('./src/routers/plan.routes')
-app.use('/api/user', userRouter);
-app.use('/api/file', fileRouter);
-app.use('/api/plan', planRouter);
+app.use('/api/user', userRouter);   //user routers
+app.use('/api/file', fileRouter);   //files routers
+app.use('/api/plan', planRouter);   //plans routers
 module.exports = app;
