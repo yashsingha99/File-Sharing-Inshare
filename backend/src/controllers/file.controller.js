@@ -3,7 +3,6 @@ const File = require("../Model/file.model");
 
 const addFile = async (req, res) => {
   try {
-    // console.log(req.body);
     const { user, snapshot, downloadURL } = req.body;
     if (!snapshot || !downloadURL || !user)
       return res.status(400).json({ message: "Insufficient data" });
@@ -31,8 +30,8 @@ const addFile = async (req, res) => {
       {
         $addToSet: { files: newFile },
         $inc: { 
-          fileCount: 1,
-          totalStorage: snapshot.fileSize / 1000000 
+          leftFiles: 1,
+          leftData: snapshot.fileSize / 1000000 
         }
       },
       {
@@ -47,6 +46,8 @@ const addFile = async (req, res) => {
     console.log("addFile => ", error);
   }
 };
+
+
 
 const updatePassword = async (req, res) => {
   try {

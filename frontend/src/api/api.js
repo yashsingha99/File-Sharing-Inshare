@@ -55,13 +55,13 @@ export const userFiles = async (user) => {
   }
 };
 
-export const updatePlan = async (data) => {
+export const addPlan = async (data) => {
   try {
-    const res = await axios.post(`${URI}/api/user/updatePlan`, data);
-    console.log("updatePlan", res);
+    const res = await axios.post(`${URI}/api/user/addPlan`, data);
+    console.log("addPlan", res);
     return res;
   } catch (error) {
-    console.log("updatePlan", error);
+    console.log("addPlan", error);
   }
 };
 
@@ -84,3 +84,15 @@ export const fetchPlan = async (data) => {
     console.log("fetchPlan", error);
   }
 };
+
+export const decreaseValidity = async (data) => {
+  try {
+    const res = await axios.post(`${URI}/api/user/decreaseValidity`, data);
+    console.log("decreaseValidity", res);
+    return res;
+  } catch (error) {
+    console.log("decreaseValidity", error);
+  }
+};
+
+// export const 

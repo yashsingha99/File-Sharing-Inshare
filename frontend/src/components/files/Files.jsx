@@ -13,6 +13,9 @@ import "./file.css";
 import CreatedFile from "./CreatedFile";
 import DoneIcon from "@mui/icons-material/Done";
 import filesrc from "../../images/file.png";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+const MySwal = withReactContent(Swal);
 
 function Files() {
   const [url, setUrl] = useState();
@@ -56,16 +59,31 @@ function Files() {
      alert("user doesn't exist")
   }; 
 
-  const updatePassword = async () => {
-    const data = { password, fileId };
-    const res = await upadatePassword(data);
-    setPassword("");
+  const handleDrop = (acceptedFiles) => {
+    
   };
 
-  const handleDrop = (acceptedFiles) => {
-    setIsShare(false);
-    setFile(acceptedFiles);
-    console.log(acceptedFiles);
+  const updatePassword = (acceptedFiles) => {
+    MySwal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to update the password?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Proceed",
+      cancelButtonText: "Cancle",
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const data = { password, fileId };
+        const res = await upadatePassword(data);
+        setPassword("");
+        MySwal.fire("Success", "password updated.", "success");
+        fetch();
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        MySwal.fire("Cancelled", "Cancelled", "error");
+      }
+    });
   };
 
   const handleCopyClick = () => {

@@ -8,35 +8,48 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-
     email: {
       type: String,
       required: true,
     },
+
     files: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref:"File"
       },
     ],
-
-    premium: {
+    
+    currentPlan: {
       type : Object,
       default:{    
-        name : "basic",
-        storage : 5,
-        numberOfFiles : 10,
-        price : 0
+        Validity : 1,
+        file : 2,
+        data : 2,
       }
     },
-    totalStorage : {
+
+    leftData : {
      type : Number,
      default : 0,
     },
-    fileCount :{
+
+    leftFiles :{
       type: Number,
       default : 0
+    },
+
+    leftValidity : {
+      type : Number,
+      default : 0
+    },
+
+    previousPlan : [
+     {
+     type : mongoose.Schema.Types.ObjectId,
+     ref : "Plan"
     }
+    ]
   },
   {
     timeStamps: true,
@@ -46,7 +59,7 @@ const userSchema = mongoose.Schema(
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
 
-  this.password = await bcrypt.hash(this.password, 10);
+  this.password = bcrypt.hash(this.password, 10);
   next();
 });
 

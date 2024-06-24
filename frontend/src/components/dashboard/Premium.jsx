@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import CheckCircleSharpIcon from "@mui/icons-material/CheckCircleSharp";
 import SearchIcon from "@mui/icons-material/Search";
-import AutofpsSelectIcon from '@mui/icons-material/AutofpsSelect';
+import AutofpsSelectIcon from "@mui/icons-material/AutofpsSelect";
 import TuneIcon from "@mui/icons-material/Tune";
 import { pricing } from "../files/pricing";
-import { updatePlan } from "../../api/api";
+import { addPlan } from "../../api/api";
 import { useUser } from "@clerk/clerk-react";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -27,7 +27,7 @@ function Premium() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         const data = { plan: pricing[idx], user };
-        const res = await updatePlan(data);
+        const res = await addPlan(data);
         MySwal.fire("Success", "payment succesfull.", "success");
         fetch();
       } else if (result.dismiss === Swal.DismissReason.cancel) {
@@ -40,22 +40,17 @@ function Premium() {
     {
       rupee: "155",
       data: "2GB",
-      data: "03-may-2024",
+      // data: "03-may-2024",
       days: "24",
     },
     {
       rupee: "155",
       data: "2GB",
-      data: "03-may-2024",
+      // data: "03-may-2024",
       days: "24",
     },
   ];
 
-  // const allPacksTitle = [
-  //   {
-  //     "Recommended Packes"
-  //   }
-  // ]
   return (
     // <section className="flex mt-32 ml-32 md:mt-12 md:ml-28 flex flex-col justify-center h-full items-center w-5/6 text-gray-600 body-font ">
     //   <div className="md:w-full flex flex-col items-center px-5">
@@ -303,24 +298,29 @@ function Premium() {
           </div>
           <div className="w-full">
             {prev.map((prevPlan) => (
-              <div className="flex bg-white mb-4 p-4 rounded-xl  border justify-between w-full">
-                <div className="">
-                  <h2 className="font-medium">
-                    ₹{prevPlan.rupee} - {prevPlan.data} - {prevPlan.days} day
-                  </h2>
-                  <h4 className="text-gray-400 text-xs md:text-sm ">
-                    ₹{prevPlan.rupee} - {prevPlan.data}
-                  </h4>
+              <div className=" bg-white mb-4  pb-4 rounded-xl  border   w-full">
+                <span className=" bg-cyan-500 text-white px-3 py-1 tracking-widest text-xs rounded-l">
+                  CURRENT PLAN
+                </span>
+                <div className="flex px-4 justify-between w-full">
+                  <div>
+                    <h2 className="font-medium">
+                      ₹{prevPlan.rupee} - {prevPlan.data} - {prevPlan.days} day
+                    </h2>
+                    <h4 className="text-gray-400 text-xs md:text-sm ">
+                      ₹{prevPlan.rupee} - {prevPlan.data}
+                    </h4>
+                  </div>
+                  <button className="px-4 py-1 rounded-full text-white bg-cyan-500 active:bg-cyan-400 hover:bg-cyan-700  bg-cyan-500">
+                    Repeat
+                  </button>
                 </div>
-                <button className="px-4 py-1 rounded-full text-white bg-cyan-500">
-                  Repeat
-                </button>
               </div>
             ))}
           </div>
         </div>
         <div className="w-full h-full flex justify-center  bg-white p-4">
-          <div className="w-4/5" >
+          <div className="w-4/5">
             <div
               style={{ border: "1px solid rgb(6 182 212)" }}
               className=" w-full bg-white flex  justify-end items-center rounded-xl"

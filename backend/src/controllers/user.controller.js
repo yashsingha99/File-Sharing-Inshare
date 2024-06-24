@@ -38,7 +38,7 @@ const login = async (req, res) => {
   }
 };
 
-const updatePlan = async (req, res) => {
+const addPlan = async (req, res) => {
   try {
     const { plan, user } = req.body;
     if (!plan || !user)
@@ -50,10 +50,18 @@ const updatePlan = async (req, res) => {
     });
     if (!checkUser)
       return res.status(400).json({ message: "User doesn't exist" });
+    const validValue = plan?.Validity ? plan?.Validity : 0;
+    const filevalue = plan?.file ? plan?.file : 0;
+    const dataValue = plan?.data ? plan?.data : 0;
+
     const updateUser = await User.findByIdAndUpdate(
       checkUser._id,
       {
-        premium: plan,
+        $inc: {
+          Validity: validValue,
+          file: filevalue,
+          data: dataValue,
+        },
       },
       {
         new: true,
@@ -70,29 +78,81 @@ const updatePlan = async (req, res) => {
 };
 
 const fetchPlan = async (req, res) => {
-try {
-     const user = req.body;
-     if(!user)
-        return res.status(400).json({message : "Insufficient data"})
-     const email = user.emailAddresses[0].emailAddress;
-     const username = user.username;
-     const findUser = await User.findOne({
-      $or : [{email},{username}]
-     })
-     if(!findUser)
-       return res.status(400).json({message : "User doesn't exist"})
-     const planData = {premium : findUser.premium, spent : {fileCount : findUser.fileCount, totalStorage : findUser.totalStorage}}
-     res.status(200).json({planData, message : "Sucessfully fetched user's plan and current spent plan"})
-} catch (error) {
-  console.log("fetchPlan", error);
-}
-
+  try {
+    const user = req.body;
+    if (!user) return res.status(400).json({ message: "Insufficient data" });
+    const email = user.emailAddresses[0].emailAddress;
+    const username = user.username;
+    const findUser = await User.findOne({
+      $or: [{ email }, { username }],
+    });
+    if (!findUser)
+      return res.status(400).json({ message: "User doesn't exist" });
+    const planData = {
+      premium: findUser.premium,
+      spent: {
+        fileCount: findUser.leftFiles,
+        totalStorage: findUser.leftData,
+        validity: findUser.leftValidity,
+      },
+    };
+    res
+      .status(200)
+      .json({
+        planData,
+        message: "Sucessfully fetched user's plan and current spent plan",
+      });
+  } catch (error) {
+    console.log("fetchPlan", error);
+  }
 };
 
 const updateUser = async (req, res) => {
-  const{user} = req.body
- };
+  const { user } = req.body;
+};
+
+const decreaseValidity = async (req, res) => {
+  const user = req.body;
+  if (!user) return res.status(400).json({ message: "Insufficient data" });
+  const email = user.emailAddresses[0].emailAddress;
+  const username = user.username;
+  const checkUser = await User.findOne({
+    $or: [{ email }, { username }],
+  });
+  if (!checkUser)
+    return res.status(400).json({ message: "User doesn't exist" });
+  const decrValidity = await User.findByIdAndUpdate(checkUser._id, {
+    $dec: { leftValidity: 1 },
+  });
+};
+
+const fetchPrevoiusPlans = async (req, res) => {
+  try {
+    const user = req.body;
+    if (!user) return res.status(400).json({ message: "Insufficient data" });
+    const email = user.emailAddresses[0].emailAddress;
+    const username = user.username;
+    const checkUser = await User.findOne({
+      $or: [{ email }, { username }],
+    });
+    if (!checkUser)
+      return res.status(400).json({ message: "User doesn't exist" });
+    const previousPlans = checkUser.previosPlan;
+    res
+      .status(200)
+      .json({ previousPlans, message: "successfully previous plans fetched" });
+  } catch (error) {
+    console.log("fetchPrevoiusPlans", error);
+  }
+};
 
 
-
-module.exports = { register, login, updatePlan, fetchPlan, updateUser };
+module.exports = {
+  register,
+  login,
+  addPlan,
+  fetchPlan,
+  updateUser,
+  decreaseValidity,
+  fetchPrevoiusPlans,
+};
