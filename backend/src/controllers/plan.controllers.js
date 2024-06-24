@@ -64,7 +64,16 @@ const deletePlan = async (req, res) => {
   }
 };
 
-const fetchAllPlans = async (req, res) => {};
+const fetchAllPlans = async (req, res) => {
+try {
+    const allPlans = await Plan.find({})
+    if(!allPlans) 
+       return res.status(400).json({message : "plan doesn't exist"})
+    res.status(200).json({allPlans, message : "sucessfully Plan fetched"})
+} catch (error) {
+  console.log("fetchAllPlans", error);
+}
+};
 
 module.exports = {
   createPlan,
