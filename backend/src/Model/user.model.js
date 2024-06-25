@@ -22,7 +22,8 @@ const userSchema = mongoose.Schema(
     
     currentPlan: {
       type : Object,
-      default:{    
+      default:{
+        rupees : 0,    
         Validity : 1,
         file : 2,
         data : 2,

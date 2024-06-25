@@ -54,7 +54,7 @@ const addPlan = async (req, res) => {
     const filevalue = plan?.file ? plan?.file : 0;
     const dataValue = plan?.data ? plan?.data : 0;
 
-    const updateUser = await User.findByIdAndUpdate(
+    const updateplan = await User.findByIdAndUpdate(
       checkUser._id,
       {
         $inc: {
@@ -67,13 +67,13 @@ const addPlan = async (req, res) => {
         new: true,
       }
     );
-    if (!updatePlan)
+    if (!updateplan)
       return res.status(500).json({ message: "Interenal Issue " });
     res
       .status(200)
-      .json({ updateUser, message: "Sucessfully updated new plan" });
+      .json({ updateplan, message: "Sucessfully updated new plan" });
   } catch (error) {
-    console.log("updatePlan", error);
+    console.log("addPlan", error);
   }
 };
 

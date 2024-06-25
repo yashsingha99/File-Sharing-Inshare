@@ -66,7 +66,7 @@ function Sider() {
 
   if (!isClosed)
     return (
-      <section className=" justify-start text-gray-600 w-40">
+      <section className="h-full justify-start text-gray-600 w-40">
         <div className=" py-24  flex  flex-col">
           <div className="fixed bg-blue-50  sider  w-52"> 
             <span

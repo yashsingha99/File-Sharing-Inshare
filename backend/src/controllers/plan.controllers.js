@@ -4,17 +4,19 @@ const Plan = require("../Model/plan.model");
 
 const createPlan = async (req, res) => {
   try {
-    const days = req?.days ? req.days : 1;
-    const files = req?.file ? req.file : 2;
-    const data = req?.data ? req.data : 2;
-    const rupees = req?.rupees ? req.rupees : 0;
-    const newPlan = await Plan.create({
+    const {days, files ,data, rupees } = req.body
+    if(!days || !files || !data || !rupees)
+       return res.status(400).json({ message: "Insufficient data" });
+
+    const newPlan = await Plan.create(
+      {
       days,
       files,
       data,
       rupees,
-    });
-
+     }
+    );
+   
     if (!newPlan) res.status(400).json({ message: "Internal issue" });
 
     res.status(200).json({ newPlan, message: "successfully created new plan" });

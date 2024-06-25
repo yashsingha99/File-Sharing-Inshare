@@ -6,21 +6,25 @@ const planSchema = mongoose.Schema(
         default : 0,
         require : true
       },
+      
       data : {
         type:Number,
         default : 0,
-        require : true
       },
+
       files : {
         type:Number,
         default : 0,
-        require : true
       },
+
       days : {
         type:Number,
         default : 0,
-        require : true
       },
+
+      discription : {
+        type : String,
+      }
    },
    {
     timeStamps : true
