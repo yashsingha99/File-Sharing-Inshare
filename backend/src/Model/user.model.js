@@ -22,7 +22,7 @@ const userSchema = mongoose.Schema(
       },
     ],
 
-    leftPlan: [
+    Plan: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "LeftPlan",

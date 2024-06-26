@@ -59,7 +59,7 @@ const addPlan = async (req, res) => {
         return res.status(400).json({message : "Plan doesn't exist"})
     
     const createSubPlan = await LeftPlan.create({
-      plan : findPlan._id,
+      plan : findPlan,
       isActivate : false,   //* by Default isActivate is false
       leftData : findPlan.data,
       leftFiles : findPlan.files,
@@ -71,17 +71,13 @@ const addPlan = async (req, res) => {
     const addedplan = await User.findByIdAndUpdate(
       checkUser._id,
       {
-        $inc: {
-          Validity: validValue,
-          file: filevalue,
-          data: dataValue,
-        },
+        $addToSet: { Plan :  createSubPlan},
       },
       {
         new: true,
       }
     );
-    if (!updateplan)
+    if (!addedplan)
       return res.status(500).json({ message: "Interenal Issue " });
     res
       .status(200)
