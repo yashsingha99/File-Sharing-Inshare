@@ -1,13 +1,14 @@
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt")
- 
+const bcrypt = require("bcrypt");
+
 const userSchema = mongoose.Schema(
   {
     username: {
       type: String,
       required: true,
     },
+
     email: {
       type: String,
       required: true,
@@ -16,41 +17,23 @@ const userSchema = mongoose.Schema(
     files: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref:"File"
+        ref: "File",
       },
     ],
     
-    currentPlan: {
-      type : Object,
-      default:{
-        rupees : 0,    
-        Validity : 1,
-        file : 2,
-        data : 2,
-      }
-    },
+    leftPlan: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "LeftPlan",
+      },
+    ],
 
-    leftData : {
-     type : Number,
-     default : 0,
-    },
-
-    leftFiles :{
-      type: Number,
-      default : 0
-    },
-
-    leftValidity : {
-      type : Number,
-      default : 0
-    },
-
-    previousPlan : [
-     {
-     type : mongoose.Schema.Types.ObjectId,
-     ref : "Plan"
-    }
-    ]
+    previousPlan: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Plan",
+      },
+    ],
   },
   {
     timeStamps: true,
@@ -64,9 +47,9 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-userSchema.methods.isPasswordCorrect = async function(password){
-  return await bcrypt.compare(password, this.password)
-}
+userSchema.methods.isPasswordCorrect = async function (password) {
+  return await bcrypt.compare(password, this.password);
+};
 
-const User =  mongoose.model("User", userSchema)
-module.exports = User
+const User = mongoose.model("User", userSchema);
+module.exports = User;

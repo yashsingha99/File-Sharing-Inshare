@@ -1,5 +1,7 @@
 const User = require("../Model/user.model");
-
+const Plan = require("../Model/plan.model")
+const File = require("../Model/file.model");
+const LeftPlan = require("../Model/leftPlan.model")
 const register = async (req, res) => {
   try {
     const user = req.body;
@@ -43,6 +45,7 @@ const addPlan = async (req, res) => {
     const { plan, user } = req.body;
     if (!plan || !user)
       return res.status(400).json({ message: "Insufficient data" });
+
     const email = user.emailAddresses[0].emailAddress;
     const username = user.username;
     const checkUser = await User.findOne({
@@ -50,11 +53,22 @@ const addPlan = async (req, res) => {
     });
     if (!checkUser)
       return res.status(400).json({ message: "User doesn't exist" });
-    const validValue = plan?.Validity ? plan?.Validity : 0;
-    const filevalue = plan?.file ? plan?.file : 0;
-    const dataValue = plan?.data ? plan?.data : 0;
 
-    const updateplan = await User.findByIdAndUpdate(
+    const findPlan = await Plan.findById(plan._id)
+    if(!findPlan)
+        return res.status(400).json({message : "Plan doesn't exist"})
+    
+    const createSubPlan = await LeftPlan.create({
+      plan : findPlan._id,
+      isActivate : false,   //* by Default isActivate is false
+      leftData : findPlan.data,
+      leftFiles : findPlan.files,
+      leftValidity : findPlan.days
+    })
+    if(!createSubPlan)
+       return res.status(500).json({message : "Internel Issues"})
+
+    const addedplan = await User.findByIdAndUpdate(
       checkUser._id,
       {
         $inc: {
@@ -76,6 +90,10 @@ const addPlan = async (req, res) => {
     console.log("addPlan", error);
   }
 };
+
+const changeisActivate = async(req, res) => {
+     const {bn} = req.body
+}
 
 const fetchPlan = async (req, res) => {
   try {

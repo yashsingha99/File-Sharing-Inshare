@@ -33,7 +33,7 @@ function Premium() {
     MySwal.fire({
         title: "Are you sure?",
         text: "Do you really want to buy this plan?",
-        icon: "warning",
+        icon: "info",
         showCancelButton: true,
         confirmButtonText: "Pay",
         cancelButtonText: "Cancel",
@@ -183,13 +183,13 @@ const saveBillAsPDF = (billDetails) => {
             <div className="text-cyan-500  mb-2 pb-4 text-2xl">
               <TuneIcon className="" />
             </div>
-            <div className="w-full flex flex-col items-end" >
+            <div className="md:w-full mx-auto w-5/6 flex flex-col md:items-end" >
             {allPlan && allPlan.map((plan, i) => {
              if(plan.rupees !== 0)
             return (
-                <div key={i} className="mb-4 primBorder h-20 border-b w-1/2 flex ">
-                 <div className="w-8" >
-                   <h1 className="font-medium text-xl" >₹{plan.rupees}</h1>
+                <div key={i} className="mb-4 primBorder justify-between h-20 border-b w-full flex ">
+                 <div className="md:w-8 w-4" >
+                   <h1 className="font-medium text-lg md:text-xl" >₹{plan.rupees}</h1>
                   </div>
                   <div className="flex w-5/6 justify-around">
                   {plan.days !== 0 && <div className="text-center">
