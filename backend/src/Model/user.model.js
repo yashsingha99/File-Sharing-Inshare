@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 
 const userSchema = mongoose.Schema(
   {
+
     username: {
       type: String,
       required: true,
@@ -20,7 +21,7 @@ const userSchema = mongoose.Schema(
         ref: "File",
       },
     ],
-    
+
     leftPlan: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -28,12 +29,6 @@ const userSchema = mongoose.Schema(
       },
     ],
 
-    previousPlan: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Plan",
-      },
-    ],
   },
   {
     timeStamps: true,
