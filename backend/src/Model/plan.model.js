@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 const planSchema = mongoose.Schema(
    {
       rupees : {
@@ -28,7 +29,8 @@ const planSchema = mongoose.Schema(
    },
    {
     timestamps: true
-})
+   }
+)
 
 const Plan = mongoose.model("Plan", planSchema)
 
