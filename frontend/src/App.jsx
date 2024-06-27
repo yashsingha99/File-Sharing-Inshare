@@ -30,9 +30,46 @@ import Card from "./Theme/Card";
 import { useUser } from "@clerk/clerk-react";
 const MySwal = withReactContent(Swal);
 function App() {
+  // useEffect(() => {
+  //   const handleContextMenu = (event) => {
+  //     event.preventDefault();
+  //   };
+
+  //   const handleKeyDown = (event) => {
+  //     if (
+  //       event.keyCode === 123 || // F12
+  //       (event.ctrlKey && event.shiftKey && event.keyCode === 73)
+  //     ) {
+  //       // Ctrl+Shift+I
+  //       event.preventDefault();
+  //       return false;
+  //     }
+  //   };
+
+  //   const checkDevToolsOpen = () => {
+  //     const threshold = 160;
+  //     const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+  //     const heightThreshold =
+  //       window.outerHeight - window.innerHeight > threshold;
+  //     if (widthThreshold || heightThreshold) {
+  //       alert("Developer tools are open. Please close them.");
+  //     }
+  //   };
+
+  //   document.addEventListener("contextmenu", handleContextMenu);
+  //   document.addEventListener("keydown", handleKeyDown);
+  //   const interval = setInterval(checkDevToolsOpen, 1000);
+
+  //   return () => {
+  //     document.removeEventListener("contextmenu", handleContextMenu);
+  //     document.removeEventListener("keydown", handleKeyDown);
+  //     clearInterval(interval);
+  //   };
+  // }, []);
+
   const [offLine, setOffLine] = useState(false);
   const [themeMode, setThemeMode] = useState("light");
- const user = useUser()
+  const user = useUser();
   const lightTheme = () => {
     setThemeMode("light");
   };
@@ -83,32 +120,32 @@ function App() {
   const location = useLocation().pathname.split("/")[1];
   return (
     <>
-        <div className=" App-scroll h-full w-full">
-      <ThemeProvider value={{ themeMode, lightTheme, darkTheme }}>
+      <div className=" App-scroll h-full w-full">
+        <ThemeProvider value={{ themeMode, lightTheme, darkTheme }}>
           {/* <ThemeBtn /> */}
-      </ThemeProvider>
-      
-          {location !== "app"
-            ? location != "CreatedFile" && <Navbar />
-            : location != "CreatedFile" && <Header />}
-          <Outlet />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/downloadFile/:fileSlug" element={<CreatedFile />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Signup />} />
-            <Route path="/CreatedFile/:fileId" element={<CreatedFile />} />
-            <Route path="/learnMore" element={<LearnMore />} />
-            <Route path="/contactUs" element={<ContactUs />} />
-            <Route path="/app" element={<Dashoard />}>
-              <Route path="/app/" element={<ShareFile />} />
-              <Route path="/app/pricing" element={<Premium />} />
-              <Route path="/app/history" element={<History />} />
-              <Route path="/app/planlimit" element={<PlanLimit />} />
-            </Route>
-          </Routes>
-        </div>
+        </ThemeProvider>
+
+        {location !== "app"
+          ? location != "CreatedFile" && <Navbar />
+          : location != "CreatedFile" && <Header />}
+        <Outlet />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/downloadFile/:fileSlug" element={<CreatedFile />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Signup />} />
+          <Route path="/CreatedFile/:fileId" element={<CreatedFile />} />
+          <Route path="/learnMore" element={<LearnMore />} />
+          <Route path="/contactUs" element={<ContactUs />} />
+          <Route path="/app" element={<Dashoard />}>
+            <Route path="/app/" element={<ShareFile />} />
+            <Route path="/app/pricing" element={<Premium />} />
+            <Route path="/app/history" element={<History />} />
+            <Route path="/app/planlimit" element={<PlanLimit />} />
+          </Route>
+        </Routes>
+      </div>
     </>
   );
 }

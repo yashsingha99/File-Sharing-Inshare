@@ -7,13 +7,14 @@ import TuneIcon from "@mui/icons-material/Tune";
 import { pricing } from "../files/pricing";
 import { addPlan } from "../../api/api";
 import { useUser } from "@clerk/clerk-react";
-import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
 import { fetchAllPlans } from "../../api/planApi";
 import { useLocation } from "react-router-dom";
 import pay from "../../images/pay.jpeg";
 import html2pdf from "html2pdf.js";
 import { fetchPurchashedPlans } from "../../api/user.api";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import BigShadowedWord from "./BigShadowedWord";
 const MySwal = withReactContent(Swal);
 
 function Premium() {
@@ -38,6 +39,51 @@ function Premium() {
     };
     user && fetch();
   }, [location, user, isbuy]);
+
+  const convertTimeAndDate = (utcTime) => {
+    return new Date(
+      new Date(utcTime).toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
+    ).toLocaleString("en-IN");
+  };
+
+  const viewAllPreRecharge = () => {
+    MySwal.fire({
+      html: (
+        <div>
+          {allBoughtPlan &&
+              allBoughtPlan.map((prevPlan, i) => (
+          <div
+            key={i}
+            className=" bg-white mb-4  pb-4 rounded-xl  border w-1/2  md : w-full"
+          >
+            {prevPlan.isCurrent && (
+              <span className=" bg-cyan-500  text-white px-3 py-1 tracking-widest text-xs rounded-l">
+                CURRENT PLAN
+              </span>
+            )}
+            <div className="flex px-4 justify-between w-full">
+              <div>
+                <h2 className="">
+                  ₹{prevPlan.Plan.rupees} - {prevPlan.Plan.data}MB/pack -{" "}
+                  {prevPlan.Plan.days} day
+                </h2>
+                <h4 className="text-gray-500 text-sm ">
+                  Recharged ₹{prevPlan.Plan.rupees} on {prevPlan.Plan.data}
+                </h4>
+              </div>
+              <button onClick={() => handleBuy(prevPlan)}  className="px-4 py-1 rounded-full text-white bg-cyan-500 active:bg-cyan-400 hover:bg-cyan-700  bg-cyan-500">
+                Repeat
+              </button>
+            </div>
+          </div>
+          ))}
+        </div>
+      ),
+      width: '700px',
+      padding: '20px',
+      showCloseButton: true
+    });
+  };
 
   const handleBuy = (plan) => {
     MySwal.fire({
@@ -148,16 +194,16 @@ function Premium() {
               Previous Recharges
             </h2>
             {allBoughtPlan && (
-              <div className=" cursor-pointer text-cyan-500 font-medium">
+              <div onClick={viewAllPreRecharge} className=" cursor-pointer text-cyan-500 font-medium">
                 View All
               </div>
             )}
           </div>
-          <div className="w-full">
-            {allBoughtPlan &&
-              allBoughtPlan.map((prevPlan, i) => {
+          <div className="md:w-3/4  w-full mx-auto">
+            {allBoughtPlan ?
+              allBoughtPlan.slice(0, 2).map((prevPlan, i) => {
                 console.log(prevPlan);
-
+                // console.log(convertTimeAndDate(prevPlan?.createdAt))
                 return (
                   <div
                     key={i}
@@ -179,13 +225,14 @@ function Premium() {
                           {prevPlan.Plan.data}
                         </h4>
                       </div>
-                      <button className="px-4 py-1 rounded-full text-white bg-cyan-500 active:bg-cyan-400 hover:bg-cyan-700  bg-cyan-500">
+                      <button onClick={() => handleBuy(prevPlan)}  className="px-4 py-1 rounded-full text-white bg-cyan-500 active:bg-cyan-400 hover:bg-cyan-700  bg-cyan-500">
                         Repeat
                       </button>
                     </div>
                   </div>
                 );
-              })}
+              }) : <BigShadowedWord child={"No Previous Plan"} />
+            }
           </div>
         </div>
         <div className="w-full App-scroll h-full  flex justify-center  bg-white p-4">
@@ -266,237 +313,3 @@ function Premium() {
 }
 
 export default Premium;
-
-//<section className="flex mt-32 ml-32 md:mt-12 md:ml-28 flex flex-col justify-center h-full items-center w-5/6 text-gray-600 body-font ">
-//   <div className="md:w-full flex flex-col items-center px-5">
-//     <div className="flex flex-col text-center md:w-1/2 mb-20">
-//       <h1 className="sm:text-4xl text-3xl font-medium title-font mb-2 text-gray-900">
-//         Pricing
-//       </h1>
-//       <div className="flex w-full  mx-auto border-2 border-indigo-500 rounded overflow-hidden">
-//         <button
-//           onClick={() => setIsMonthly((p) => true)}
-//           className={`py-1 px-4 focus:outline-none ${
-//             isMonthly && " bg-indigo-500 text-white "
-//           }`}
-//         >
-//           Monthly
-//         </button>
-//         <button
-//           onClick={() => setIsMonthly((p) => false)}
-//           className={`py-1 px-4 focus:outline-none ${
-//             !isMonthly && " bg-indigo-500 text-white "
-//           } `}
-//         >
-//           Annually
-//         </button>
-//       </div>
-//     </div>
-//     {isMonthly && (
-//       <div className="flex flex-wrap  w-full justify-center">
-//         <div className="p-4 xl:w-1/4 md:w-1/2 w-full">
-//           <div className="h-full p-6 rounded-lg border-2 border-gray-300 flex flex-col relative overflow-hidden">
-//             <h2 className="text-sm tracking-widest title-font mb-1 font-medium">
-//               START
-//             </h2>
-//             <h1 className="text-2xl text-gray-900 pb-4 mb-4 border-b border-gray-200 leading-none">
-//               Free
-//             </h1>
-//             <p className="flex items-center text-gray-600 mb-2">
-//               <span className="w-4 h-4 mr-2 inline-flex items-center justify-center  text-indigo-500 rounded-full flex-shrink-0">
-//                 <CheckCircleSharpIcon />
-//               </span>{" "}
-//               5 GB storage, basic features
-//             </p>
-//             <p className="flex items-center text-gray-600 mb-2">
-//               <span className="w-4 h-4 mr-2 inline-flex items-center justify-center  text-indigo-500 rounded-full flex-shrink-0">
-//                 <CheckCircleSharpIcon />
-//               </span>{" "}
-//               Free - Limited to 10 files, 5 GB max
-//             </p>
-//             <p className="flex items-center text-gray-600 mb-6">
-//               <span className="w-4 h-4 mr-2 inline-flex items-center justify-center  text-indigo-500 rounded-full flex-shrink-0">
-//                 <CheckCircleSharpIcon />
-//               </span>{" "}
-//               Free - 5 GB, essential tools
-//             </p>
-//             <button
-//               onClick={() => handleBuy(0)}
-//               className="flex items-center mt-auto text-white bg-gray-400 border-0 py-2 px-4 w-full focus:outline-none hover:bg-gray-500 rounded"
-//             >
-//               Buy
-//               <svg
-//                 fill="none"
-//                 stroke="currentColor"
-//                 strokeLinecap="round"
-//                 strokeLinejoin="round"
-//                 strokeWidth="2"
-//                 className="w-4 h-4 ml-auto"
-//                 viewBox="0 0 24 24"
-//               >
-//                 <path d="M5 12h14M12 5l7 7-7 7"></path>
-//               </svg>
-//             </button>
-//           </div>
-//         </div>
-//         <div className="p-4 xl:w-1/4 md:w-1/2 w-full">
-//           <div className="h-full p-6 rounded-lg border-2 border-indigo-500 flex flex-col relative overflow-hidden">
-//             <span className="bg-indigo-500 text-white px-3 py-1 tracking-widest text-xs absolute right-0 top-0 rounded-bl">
-//               POPULAR
-//             </span>
-//             <h2 className="text-sm tracking-widest title-font mb-1 font-medium">
-//               PRO
-//             </h2>
-//             <h1 className="text-2xl text-gray-900 leading-none flex items-center pb-4 mb-4 border-b border-gray-200">
-//               <span>50₹</span>
-//               <span className="text-lg ml-1 font-normal text-gray-500">
-//                 /mo
-//               </span>
-//             </h1>
-//             <p className="flex items-center text-gray-600 mb-2">
-//               <span className="w-4 h-4 mr-2 inline-flex items-center justify-center  text-indigo-500 rounded-full flex-shrink-0">
-//                 <CheckCircleSharpIcon />
-//               </span>{" "}
-//               10 GB storage
-//             </p>
-//             <p className="flex items-center text-gray-600 mb-2">
-//               <span className="w-4 h-4 mr-2 inline-flex items-center justify-center  text-indigo-500 rounded-full flex-shrink-0">
-//                 <CheckCircleSharpIcon />
-//               </span>{" "}
-//               up to 50 files
-//             </p>
-//             <p className="flex items-center text-gray-600 mb-2">
-//               <span className="w-4 h-4 mr-2 inline-flex items-center justify-center  text-indigo-500 rounded-full flex-shrink-0">
-//                 <CheckCircleSharpIcon />
-//               </span>{" "}
-//               50 GB, advanced features
-//             </p>
-//             <p className="flex items-center text-gray-600 mb-6">
-//               <span className="w-4 h-4 mr-2 inline-flex items-center justify-center  text-indigo-500 rounded-full flex-shrink-0">
-//                 <CheckCircleSharpIcon />
-//               </span>{" "}
-//               Multiple files sharing
-//             </p>
-//             <button
-//               onClick={() => Enroll(1)}
-//               className="flex items-center mt-auto text-white bg-indigo-500 border-0 py-2 px-4 w-full focus:outline-none hover:bg-indigo-600 rounded"
-//             >
-//               Button
-//               <svg
-//                 fill="none"
-//                 stroke="currentColor"
-//                 strokeLinecap="round"
-//                 strokeLinejoin="round"
-//                 strokeWidth="2"
-//                 className="w-4 h-4 ml-auto"
-//                 viewBox="0 0 24 24"
-//               >
-//                 <path d="M5 12h14M12 5l7 7-7 7"></path>
-//               </svg>
-//             </button>
-//           </div>
-//         </div>
-//       </div>
-//     )}
-//     {!isMonthly && (
-//       <div className="flex flex-wrap items-center w-full justify-center">
-//         <div className="p-4 xl:w-1/4 md:w-1/2 w-full">
-//           <div className="h-full p-6 rounded-lg border-2 border-gray-300 flex flex-col relative overflow-hidden">
-//             <h2 className="text-sm tracking-widest title-font mb-1 font-medium">
-//               Business Plan
-//             </h2>
-//             <h1 className="text-2xl text-gray-900 leading-none flex items-center pb-4 mb-4 border-b border-gray-200">
-//               <span>599₹</span>
-//               <span className="text-lg ml-1 font-normal text-gray-500">
-//                 /yr
-//               </span>
-//             </h1>
-//             <p className="flex items-center text-gray-600 mb-2">
-//               <span className="w-4 h-4 mr-2 inline-flex items-center justify-center text-indigo-500 rounded-full flex-shrink-0">
-//                 <CheckCircleSharpIcon />
-//               </span>{" "}
-//               50 GB storage
-//             </p>
-//             <p className="flex items-center text-gray-600 mb-2">
-//               <span className="w-4 h-4 mr-2 inline-flex items-center justify-center text-indigo-500 rounded-full flex-shrink-0">
-//                 <CheckCircleSharpIcon />
-//               </span>{" "}
-//               Free - up to 500 files
-//             </p>
-//             <p className="flex items-center text-gray-600 mb-6">
-//               <span className="w-4 h-4 mr-2 inline-flex items-center justify-center text-indigo-500 rounded-full flex-shrink-0">
-//                 <CheckCircleSharpIcon />
-//               </span>{" "}
-//               50 GB, advanced
-//             </p>
-//             <button
-//               onClick={() => Enroll(2)}
-//               className="flex items-center mt-auto text-white bg-gray-400 border-0 py-2 px-4 w-full focus:outline-none hover:bg-gray-500 rounded"
-//             >
-//               Button
-//               <svg
-//                 fill="none"
-//                 stroke="currentColor"
-//                 strokeLinecap="round"
-//                 strokeLinejoin="round"
-//                 strokeWidth="2"
-//                 className="w-4 h-4 ml-auto"
-//                 viewBox="0 0 24 24"
-//               >
-//                 <path d="M5 12h14M12 5l7 7-7 7"></path>
-//               </svg>
-//             </button>
-//           </div>
-//         </div>
-//         <div className="p-4 xl:w-1/4 md:w-1/2 w-full">
-//           <div className="h-full p-6 rounded-lg border-2 border-gray-300 flex flex-col relative overflow-hidden">
-//             <h2 className="text-sm tracking-widest title-font mb-1 font-medium">
-//               Enterprise Plan
-//             </h2>
-//             <h1 className="text-2xl text-gray-900 leading-none flex items-center pb-4 mb-4 border-b border-gray-200">
-//               <span>999₹</span>
-//               <span className="text-lg ml-1 font-normal text-gray-500">
-//                 /yr
-//               </span>
-//             </h1>
-//             <p className="flex items-center text-gray-600 mb-2">
-//               <span className="w-4 h-4 mr-2 inline-flex items-center justify-center text-indigo-500 rounded-full flex-shrink-0">
-//                 <CheckCircleSharpIcon />
-//               </span>{" "}
-//               unlimited storage
-//             </p>
-//             <p className="flex items-center text-gray-600 mb-2">
-//               <span className="w-4 h-4 mr-2 inline-flex items-center justify-center text-indigo-500 rounded-full flex-shrink-0">
-//                 <CheckCircleSharpIcon />
-//               </span>
-//               advanced security
-//             </p>
-//             <p className="flex items-center text-gray-600 mb-6">
-//               <span className="w-4 h-4 mr-2 inline-flex items-center justify-center text-indigo-500 rounded-full flex-shrink-0">
-//                 <CheckCircleSharpIcon />
-//               </span>{" "}
-//               tailored solutions
-//             </p>
-//             <button
-//               onClick={() => Enroll(3)}
-//               className="flex items-center mt-auto text-white bg-gray-400 border-0 py-2 px-4 w-full focus:outline-none hover:bg-gray-500 rounded"
-//             >
-//               Button
-//               <svg
-//                 fill="none"
-//                 stroke="currentColor"
-//                 strokeLinecap="round"
-//                 strokeLinejoin="round"
-//                 strokeWidth="2"
-//                 className="w-4 h-4 ml-auto"
-//                 viewBox="0 0 24 24"
-//               >
-//                 <path d="M5 12h14M12 5l7 7-7 7"></path>
-//               </svg>
-//             </button>
-//           </div>
-//         </div>
-//       </div>
-//     )}
-//   </div>
-// </section>
