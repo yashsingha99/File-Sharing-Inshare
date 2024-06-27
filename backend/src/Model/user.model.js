@@ -22,16 +22,16 @@ const userSchema = mongoose.Schema(
       },
     ],
 
-    Plan: [
+    BuyPlan: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "LeftPlan",
+        ref: "BuyPlan",
       },
     ],
 
   },
   {
-    timeStamps: true,
+    timestamps: true
   }
 );
 

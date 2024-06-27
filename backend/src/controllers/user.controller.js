@@ -1,7 +1,7 @@
 const User = require("../Model/user.model");
 const Plan = require("../Model/plan.model")
 const File = require("../Model/file.model");
-const LeftPlan = require("../Model/leftPlan.model")
+const BuyPlan = require("../Model/BuyPlan.model")
 const register = async (req, res) => {
   try {
     const user = req.body;
@@ -58,39 +58,79 @@ const addPlan = async (req, res) => {
     if(!findPlan)
         return res.status(400).json({message : "Plan doesn't exist"})
     
-    const createSubPlan = await LeftPlan.create({
-      plan : findPlan,
-      isActivate : false,   //* by Default isActivate is false
+    const createSubPlan = await BuyPlan.create({
+      Plan : findPlan,
       leftData : findPlan.data,
       leftFiles : findPlan.files,
-      leftValidity : findPlan.days
+      leftValidity : findPlan.days,
+      isCurrent : true
     })
     if(!createSubPlan)
        return res.status(500).json({message : "Internel Issues"})
 
-    const addedplan = await User.findByIdAndUpdate(
-      checkUser._id,
+    const addedPlan = await User.findByIdAndUpdate(
+      checkUser,
       {
-        $addToSet: { Plan :  createSubPlan},
+        $addToSet: { BuyPlan :  createSubPlan._id},
       },
       {
         new: true,
       }
     );
-    if (!addedplan)
+    if (!addedPlan)
       return res.status(500).json({ message: "Interenal Issue " });
     res
       .status(200)
-      .json({ updateplan, message: "Sucessfully updated new plan" });
+      .json({ addedPlan, message: "Sucessfully updated new plan" });
   } catch (error) {
     console.log("addPlan", error);
   }
 };
 
+// current plan update for uses a plan so we have to 
+// decrease plan limit
+const updateValidity = async(req, res) => {
+  try {
+    const user = req.body;
+    if (!user)
+      return res.status(400).json({ message: "insufficient data" });
+    const email = user.emailAddresses[0].emailAddress;
+    const username = user.username;
+    const existUser = await User.findOne({
+      $or: [{ email }, { username }],
+    });
+  
+    if (!existUser)
+      return res
+        .status(400)
+        .json({ message: "User doesn't exist" });
+    
+    const findCurrentPlans = await  BuyPlan.find({
+      $and : [!{isCurrent : false}, !{leftValidity : 0}]
+    })
+
+    if(!findCurrentPlans)
+       res.status(400).json({message: "your all plans validity has been finished"})
+    
+    findCurrentPlans.forEach(element => {
+      element.leftValidity =  element.leftValidity - 1
+    });
+ //! doubt to implement...
+
+  } catch (error) {
+     console.log("updateValidity", error);
+  }
+
+       
+}
+
+//!
 const changeisActivate = async(req, res) => {
      const {bn} = req.body
 }
 
+
+//!
 const fetchPlan = async (req, res) => {
   try {
     const user = req.body;
@@ -102,14 +142,7 @@ const fetchPlan = async (req, res) => {
     });
     if (!findUser)
       return res.status(400).json({ message: "User doesn't exist" });
-    const planData = {
-      premium: findUser.premium,
-      spent: {
-        fileCount: findUser.leftFiles,
-        totalStorage: findUser.leftData,
-        validity: findUser.leftValidity,
-      },
-    };
+    
     res
       .status(200)
       .json({
@@ -121,42 +154,45 @@ const fetchPlan = async (req, res) => {
   }
 };
 
+
+//!
 const updateUser = async (req, res) => {
   const { user } = req.body;
 };
 
-const decreaseValidity = async (req, res) => {
-  const user = req.body;
-  if (!user) return res.status(400).json({ message: "Insufficient data" });
-  const email = user.emailAddresses[0].emailAddress;
-  const username = user.username;
-  const checkUser = await User.findOne({
-    $or: [{ email }, { username }],
-  });
-  if (!checkUser)
-    return res.status(400).json({ message: "User doesn't exist" });
-  const decrValidity = await User.findByIdAndUpdate(checkUser._id, {
-    $dec: { leftValidity: 1 },
-  });
-};
 
-const fetchPrevoiusPlans = async (req, res) => {
+//!
+const fetchPurchashedPlans = async (req, res) => {
   try {
-    const user = req.body;
-    if (!user) return res.status(400).json({ message: "Insufficient data" });
-    const email = user.emailAddresses[0].emailAddress;
-    const username = user.username;
+    const userdata = req.body;
+    console.log(req.body);
+    if (!userdata) return res.status(400).json({ message: "Insufficient data" });
+    const email = userdata.email;
+    const username = userdata.username;
+
     const checkUser = await User.findOne({
-      $or: [{ email }, { username }],
-    });
-    if (!checkUser)
-      return res.status(400).json({ message: "User doesn't exist" });
-    const previousPlans = checkUser.previosPlan;
-    res
-      .status(200)
-      .json({ previousPlans, message: "successfully previous plans fetched" });
+      $or: [{ email }, { username }]
+    })
+      .populate({
+        path: 'BuyPlan',
+        populate: {
+          path: 'Plan'
+        }
+      });
+    
+    if (checkUser) {
+      res.status(200).json({ result: checkUser, message: "Successfully fetched previous plans" });
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+      
+    // ;
+    // if (!checkUser)
+    //   return res.status(400).json({ message: "User doesn't exist" });
+    // const BuyPlan = checkUser.BuyPlan;
+    
   } catch (error) {
-    console.log("fetchPrevoiusPlans", error);
+    console.log("fetchPurchashedPlans", error);
   }
 };
 
@@ -167,6 +203,6 @@ module.exports = {
   addPlan,
   fetchPlan,
   updateUser,
-  decreaseValidity,
-  fetchPrevoiusPlans,
+  fetchPurchashedPlans,
+  updateValidity
 };

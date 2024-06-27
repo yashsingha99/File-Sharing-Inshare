@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const leftPlanSchema = mongoose.Schema(
+const BuyPlanSchema = mongoose.Schema(
   {
 
     isActivate: {
@@ -7,7 +7,12 @@ const leftPlanSchema = mongoose.Schema(
       default : false
     },
 
-    plan: {
+    isCurrent: {
+      type: Boolean,
+      default : false
+    },
+
+    Plan: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Plan",
     },
@@ -30,9 +35,9 @@ const leftPlanSchema = mongoose.Schema(
   },
 
   {
-    timeStamps: true,
+    timestamps: true
   }
 );
 
-const LeftPlan = mongoose.model("LeftPlan", leftPlanSchema);
-module.exports = LeftPlan;
+const BuyPlan = mongoose.model("BuyPlan", BuyPlanSchema);
+module.exports = BuyPlan;

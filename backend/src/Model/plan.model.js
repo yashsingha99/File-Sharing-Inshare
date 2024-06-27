@@ -27,7 +27,7 @@ const planSchema = mongoose.Schema(
       }
    },
    {
-    timeStamps : true
+    timestamps: true
 })
 
 const Plan = mongoose.model("Plan", planSchema)

@@ -77,7 +77,7 @@ export const updateStatus = async (data) => {
 
 export const fetchPlan = async (data) => {
   try {
-    const res = await axios.post(`${URI}/api/user/fetchPlan`, data);
+    const res = await axios.get(`${URI}/api/user/fetchPlan`, data);
     console.log("fetchPlan", res);
     return res;
   } catch (error) {
@@ -94,5 +94,6 @@ export const decreaseValidity = async (data) => {
     console.log("decreaseValidity", error);
   }
 };
+
 
 // export const 
