@@ -1,4 +1,21 @@
-/node_modules  # Ignores the entire node_modules directory
-/dist          # Ignores the entire dist directory
-/build/*       # Ignores all files in the build directory
+# Node modules
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Environment variables
 .env
+
+# OS specific files
+.DS_Store
+
+# IDE specific files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
