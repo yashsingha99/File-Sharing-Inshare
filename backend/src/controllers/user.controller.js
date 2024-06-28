@@ -126,7 +126,18 @@ const updateValidity = async(req, res) => {
 
 //!
 const changeisActivate = async(req, res) => {
-     const {bn} = req.body
+     const {buyPlan} = req.body
+     if(!buyPlan) 
+       return res.status(400).json({message : "insufficient data"})
+      const change = await BuyPlan.findByIdAndUpdate(
+        buyPlan._id,
+        {
+          isActivate : !isActivate
+        },
+        {
+          new:true
+        }
+      )
 }
 
 
@@ -204,5 +215,6 @@ module.exports = {
   fetchPlan,
   updateUser,
   fetchPurchashedPlans,
-  updateValidity
+  updateValidity,
+  changeisActivate
 };
