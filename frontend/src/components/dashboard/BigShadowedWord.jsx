@@ -5,7 +5,7 @@ const StyledWord = styled.span`
   font-size: 5rem; // large text
   font-weight: bold;
   font-style: italic; // italic
-  text-shadow: 24px 12px 36px rgba(0, 0, 0, 1); // shadow
+  text-shadow: 24px 2px 20px rgba(0, 0, 0, 1); // shadow
   color: #333; // text color
   margin: 20px;
 `;

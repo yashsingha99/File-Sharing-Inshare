@@ -24,6 +24,8 @@ function Premium() {
   const location = useLocation();
   const { user } = useUser();
 
+  console.log(allBoughtPlan);
+
   useEffect(() => {
     const fetch = async () => {
       const res = await fetchAllPlans();
@@ -51,37 +53,45 @@ function Premium() {
       html: (
         <div>
           {allBoughtPlan &&
-              allBoughtPlan.map((prevPlan, i) => (
-          <div
-            key={i}
-            className=" bg-white mb-4  pb-4 rounded-xl  border w-1/2  md : w-full"
-          >
-            {prevPlan.isCurrent && (
-              <span className=" bg-cyan-500  text-white px-3 py-1 tracking-widest text-xs rounded-l">
-                CURRENT PLAN
-              </span>
-            )}
-            <div className="flex px-4 justify-between w-full">
-              <div>
-                <h2 className="">
-                  ₹{prevPlan.Plan.rupees} - {prevPlan.Plan.data}MB/pack -{" "}
-                  {prevPlan.Plan.days} day
-                </h2>
-                <h4 className="text-gray-500 text-sm ">
-                  Recharged ₹{prevPlan.Plan.rupees} on {prevPlan.Plan.data}
-                </h4>
-              </div>
-              <button onClick={() => handleBuy(prevPlan)}  className="px-4 py-1 rounded-full text-white bg-cyan-500 active:bg-cyan-400 hover:bg-cyan-700  bg-cyan-500">
-                Repeat
-              </button>
-            </div>
-          </div>
-          ))}
+            allBoughtPlan.map((prevPlan, i) => {
+              const time = convertTimeAndDate(prevPlan.createdAt).split(",")[0];
+
+              return (
+                <div
+                  key={i}
+                  className=" relative bg-white mb-4  pb-4 rounded-xl  border w-5/6  md:w-full"
+                >
+                  {prevPlan.isCurrent && (
+                    <span className="absolute top-0 left-0 bg-cyan-500  text-white px-3 py-1 tracking-widest text-xs rounded-l">
+                      CURRENT PLAN
+                    </span>
+                  )}
+                  <div className="flex px-4 mt-8 justify-between w-full">
+                    <div>
+                      <h4 className="md:text-lg text-sm">
+                        ₹{prevPlan.Plan.rupees}{prevPlan.Plan.data != 0 && ` - ${prevPlan.Plan.data}MB/pack`} - 
+                        {prevPlan.Plan.days} day
+                      </h4> 
+                      <h4 className="text-gray-500 md:text-sm text-xs">
+                        Recharged ₹{prevPlan.Plan.rupees} on {time}
+                      </h4>
+                    </div>
+                    <button
+                      onClick={() => handleBuy(prevPlan)}
+                      className="px-4 py-1 md:text-lg text-sm rounded-full text-white bg-cyan-500 active:bg-cyan-400 hover:bg-cyan-700  bg-cyan-500"
+                    >
+                      Repeat
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
         </div>
       ),
-      width: '700px',
-      padding: '20px',
-      showCloseButton: true
+      width: "30rem",
+      padding: "20px",
+      showCloseButton: true,
+      showConfirmButton:false
     });
   };
 
@@ -170,21 +180,6 @@ function Premium() {
     });
   };
 
-  const prev = [
-    {
-      rupee: "155",
-      data: "2GB",
-      // data: "03-may-2024",
-      days: "24",
-    },
-    {
-      rupee: "155",
-      data: "2GB",
-      // data: "03-may-2024",
-      days: "24",
-    },
-  ];
-
   return (
     <>
       <section className="flex ml-8 gap-4 App-scroll flex flex-col  h-full items-center w-full mx-auto bg-gray-100 body-font ">
@@ -194,16 +189,21 @@ function Premium() {
               Previous Recharges
             </h2>
             {allBoughtPlan && (
-              <div onClick={viewAllPreRecharge} className=" cursor-pointer text-cyan-500 font-medium">
+              <div
+                onClick={viewAllPreRecharge}
+                className=" cursor-pointer text-cyan-500 font-medium"
+              >
                 View All
               </div>
             )}
           </div>
           <div className="md:w-3/4  w-full mx-auto">
-            {allBoughtPlan ?
+            {allBoughtPlan ? (
               allBoughtPlan.slice(0, 2).map((prevPlan, i) => {
                 console.log(prevPlan);
-                // console.log(convertTimeAndDate(prevPlan?.createdAt))
+                const time = convertTimeAndDate(prevPlan.createdAt).split(
+                  ","
+                )[0];
                 return (
                   <div
                     key={i}
@@ -221,18 +221,22 @@ function Premium() {
                           - {prevPlan.Plan.days} day
                         </h2>
                         <h4 className="text-gray-500 text-xs text-medium md:text-sm ">
-                          Recharged ₹{prevPlan.Plan.rupees} on{" "}
-                          {prevPlan.Plan.data}
+                          Recharged ₹{prevPlan.Plan.rupees} on {time}
                         </h4>
                       </div>
-                      <button onClick={() => handleBuy(prevPlan)}  className="px-4 py-1 rounded-full text-white bg-cyan-500 active:bg-cyan-400 hover:bg-cyan-700  bg-cyan-500">
+                      <button
+                        onClick={() => handleBuy(prevPlan)}
+                        className="px-4 py-1 rounded-full text-white bg-cyan-500 active:bg-cyan-400 hover:bg-cyan-700  bg-cyan-500"
+                      >
                         Repeat
                       </button>
                     </div>
                   </div>
                 );
-              }) : <BigShadowedWord child={"No Previous Plan"} />
-            }
+              })
+            ) : (
+              <BigShadowedWord child={"No Previous Plan"} />
+            )}
           </div>
         </div>
         <div className="w-full App-scroll h-full  flex justify-center  bg-white p-4">
@@ -280,7 +284,7 @@ function Premium() {
                           {plan.data !== 0 && (
                             <div>
                               <div className="text-sm text-gray-600">Data</div>
-                              <div className="text-sm ">
+                              <div className="text-sm">
                                 {plan.data} MB/Pack
                               </div>
                             </div>

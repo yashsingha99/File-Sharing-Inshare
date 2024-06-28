@@ -60,7 +60,7 @@ function Files() {
   }; 
 
   const handleDrop = (acceptedFiles) => {
-    
+    setFile(acceptedFiles)
   };
 
   const updatePassword = (acceptedFiles) => {
@@ -75,15 +75,17 @@ function Files() {
       cancelButtonColor: "#3085d6",
     }).then(async (result) => {
       if (result.isConfirmed) {
+        setPassword("");
         const data = { password, fileId };
         const res = await upadatePassword(data);
-        setPassword("");
         MySwal.fire("Success", "password updated.", "success");
         fetch();
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         MySwal.fire("Cancelled", "Cancelled", "error");
       }
+        setPassword("");
     });
+    setPassword("");
   };
 
   const handleCopyClick = () => {
