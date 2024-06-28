@@ -126,13 +126,13 @@ const updateValidity = async(req, res) => {
 
 //!
 const changeisActivate = async(req, res) => {
-     const {buyPlan} = req.body
+     const buyPlan = req.body
      if(!buyPlan) 
        return res.status(400).json({message : "insufficient data"})
       const change = await BuyPlan.findByIdAndUpdate(
         buyPlan._id,
         {
-          isActivate : !isActivate
+          isActivate : !buyPlan.isActivate
         },
         {
           new:true

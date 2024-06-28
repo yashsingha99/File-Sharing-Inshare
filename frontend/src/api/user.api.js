@@ -11,3 +11,11 @@ export const fetchPurchashedPlans = async (user) => {
     console.log(fetchPurchashedPlans, error);
   }
 };
+export const changeisActivate = async (buyPlan) => {
+  try {
+    const res = await axios.post(`${URI}/api/user/changeisActivate`, buyPlan);
+    return res;
+  } catch (error) {
+    console.log(changeisActivate, error);
+  }
+};

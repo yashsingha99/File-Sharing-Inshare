@@ -2,13 +2,17 @@ import React, { useEffect, useState } from "react";
 import { fetchPlan } from "../../api/api";
 import { useUser } from "@clerk/clerk-react";
 import { useLocation } from "react-router-dom";
-import { fetchPurchashedPlans } from "../../api/user.api";
+import { changeisActivate, fetchPurchashedPlans } from "../../api/user.api";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+const MySwal = withReactContent(Swal);
 
 function PlanLimit() {
   const { user } = useUser();
   const [allBoughtPlan, setAllBoughtPlan] = useState();
+  const [change, setChange] = useState(false);
   const location = useLocation();
-  console.log(allBoughtPlan);
+ 
   useEffect(() => {
     const fetch = async () => {
       const resPlan = await fetchPurchashedPlans(user);
@@ -16,11 +20,34 @@ function PlanLimit() {
       setAllBoughtPlan(resPlan.data.result.BuyPlan);
     };
     user && fetch();
-  }, [user, location]);
+  }, [user, location, change]);
 
-  const changeActivity = async(plan) => {
-    const res = await 
-  }
+
+  
+  const changeActivity = (buyPlan) => {
+    MySwal.fire({
+      title: "Are you sure?",
+      text: `Do you really want to ${buyPlan.isActivate ? "Disactivate" : "Activate"}  this plan?`,
+      icon: "info",
+      showCancelButton: true,
+      confirmButtonText: `${buyPlan.isActivate ? "Disactivate" : "Activate"}`,
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const res = await changeisActivate(buyPlan)
+        setChange((p) => !p)
+        if (res.status == 200) {
+          MySwal.fire("Success",  `${buyPlan.isActivate ? "Disactivate" : "Activate"}`, "success");
+        } else {
+          MySwal.fire("Error", "Internel Issue. Please try again.", "error");
+        }
+      } else if (result.dismiss === MySwal.DismissReason.cancel) {
+        MySwal.fire("Cancelled", `${buyPlan.isActivate ? "Disactivate" : "Activate"} Process failed`, "error");
+      }
+    });
+  };
 
   return (
     <div className="w-full mt-24 font-sans bg-gray-100 justify-center flex flex-wrap h-full">
@@ -34,7 +61,7 @@ function PlanLimit() {
                   !planData.isActivate && 'opacity-25'
                 } relative drop-shadow-xl mr-8 mx-auto text-center w-3/4 md:w-2/5 bg-white rounded-lg p-4 m-4`}
               >
-                <button className="bg-blue-500 absolute button-full-opacity text-white px-4 py-2 rounded top-3 right-3">
+                <button onClick={() => changeActivity(planData)} className="bg-blue-500 absolute button-full-opacity text-white px-4 py-2 rounded top-3 right-3">
                   Activate Plan
                 </button>
                 {planData.Plan.files !== 0 && (
