@@ -1,6 +1,6 @@
 import React from 'react'
 import Sider from './Sider'
-import {Routes, Route, Outlet, useLocation} from 'react-router-dom'
+import { Outlet, useLocation} from 'react-router-dom'
 import Premium from './Premium'
 
 function Dashoard() {
