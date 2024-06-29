@@ -15,6 +15,7 @@ import DoneIcon from "@mui/icons-material/Done";
 import filesrc from "../../images/file.png";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { isAbleToShare } from "../../api/user.api";
 const MySwal = withReactContent(Swal);
 
 function Files() {
@@ -60,6 +61,9 @@ function Files() {
   }; 
 
   const handleDrop = (acceptedFiles) => {
+    const data = {user, size : ((acceptedFiles[0].size)/(1000 * 1000)).toFixed(2)}
+    isAbleToShare(data)
+    console.log(((acceptedFiles[0].size)/(1000 * 1000)).toFixed(2));
     setFile(acceptedFiles)
   };
 

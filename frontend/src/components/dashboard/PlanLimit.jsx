@@ -6,7 +6,7 @@ import { changeisActivate, fetchPurchashedPlans } from "../../api/user.api";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 const MySwal = withReactContent(Swal);
-
+// import Wait from "../../images/Wait.GIF"
 function PlanLimit() {
   const { user } = useUser();
   const [allBoughtPlan, setAllBoughtPlan] = useState();
@@ -48,7 +48,7 @@ function PlanLimit() {
       }
     });
   };
-
+if(allBoughtPlan)
   return (
     <div className="w-full mt-24 font-sans bg-gray-100 justify-center flex flex-wrap h-full">
       <div className="w-full flex flex-wrap">
@@ -149,6 +149,11 @@ function PlanLimit() {
       </div>
     </div>
   );
+  else return (
+    <>
+     {/* <img src={pay} alt="" /> */}
+    </>
+  )
 }
 
 export default PlanLimit;

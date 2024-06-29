@@ -8,7 +8,7 @@ export const fetchPurchashedPlans = async (user) => {
     const res = await axios.post(`${URI}/api/user/fetchPurchashedPlans`, userdata);
     return res;
   } catch (error) {
-    console.log(fetchPurchashedPlans, error);
+    console.log("fetchPurchashedPlans", error);
   }
 };
 export const changeisActivate = async (buyPlan) => {
@@ -16,6 +16,18 @@ export const changeisActivate = async (buyPlan) => {
     const res = await axios.post(`${URI}/api/user/changeisActivate`, buyPlan);
     return res;
   } catch (error) {
-    console.log(changeisActivate, error);
+    console.log("changeisActivate", error);
   }
 };
+
+export const isAbleToShare = async (data) => {
+  try {
+    const userdata = {email : data.user.primaryEmailAddress.emailAddress, username : data.user.username}
+    const fileInfo = {userdata, size : data.size}
+    const res = await axios.post(`${URI}/api/user/isAbleToShare`, fileInfo);
+    return res;
+  } catch (error) {
+    console.log("isAbleToShare", error);
+  }
+};
+

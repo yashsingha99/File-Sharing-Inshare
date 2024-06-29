@@ -165,12 +165,6 @@ const fetchPlan = async (req, res) => {
 
 
 //!
-const updateUser = async (req, res) => {
-  const { user } = req.body;
-};
-
-
-//!
 const fetchPurchashedPlans = async (req, res) => {
   try {
     const userdata = req.body;
@@ -194,16 +188,11 @@ const fetchPurchashedPlans = async (req, res) => {
     } else {
       res.status(404).json({ message: "User not found" });
     }
-      
-    // ;
-    // if (!checkUser)
-    //   return res.status(400).json({ message: "User doesn't exist" });
-    // const BuyPlan = checkUser.BuyPlan;
-    
   } catch (error) {
     console.log("fetchPurchashedPlans", error);
   }
 };
+
 
 
 module.exports = {
@@ -211,7 +200,6 @@ module.exports = {
   login,
   addPlan,
   fetchPlan,
-  updateUser,
   fetchPurchashedPlans,
   updateValidity,
   changeisActivate
