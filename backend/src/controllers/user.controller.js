@@ -100,7 +100,6 @@ const addPlan = async (req, res) => {
 // current plan update for uses a plan so we have to 
 // decrease plan limit
 const updateValidity = async(req, res) => {
-  async function decrementData() {
     const uri = process.env.URI; // Replace with your MongoDB connection string
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
   
@@ -113,16 +112,15 @@ const updateValidity = async(req, res) => {
         { leftValidity: { $gt: 0 } }, // Only update documents where data is greater than 0
         { $inc: { leftValidity: -1 } } // Decrement the data field by 1
       );
-  
-      console.log(`${result.modifiedCount} document(s) were updated.`);
+      res.status(200).json({ data : result.modifiedCount, message : "document(s) were updated."})
+      // console.log(`${result.modifiedCount} document(s) were updated.`);
     }catch(error) {
       console.error(`updateValidity ${error}`);
     } finally {
       await client.close();
     }
   }
-  
-}
+
 
 //!
 const changeisActivate = async(req, res) => {

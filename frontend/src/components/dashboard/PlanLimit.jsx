@@ -27,10 +27,10 @@ function PlanLimit() {
   const changeActivity = (buyPlan) => {
     MySwal.fire({
       title: "Are you sure?",
-      text: `Do you really want to ${buyPlan.isActivate ? "Disactivate" : "Activate"}  this plan?`,
+      text: `Do you really want to ${buyPlan.isActivate ? "Deactivate" : "Activate"}  this plan?`,
       icon: "info",
       showCancelButton: true,
-      confirmButtonText: `${buyPlan.isActivate ? "Disactivate" : "Activate"}`,
+      confirmButtonText: `${buyPlan.isActivate ? "Deactivate" : "Activate"}`,
       cancelButtonText: "Cancel",
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
@@ -39,12 +39,12 @@ function PlanLimit() {
         const res = await changeisActivate(buyPlan)
         setChange((p) => !p)
         if (res.status == 200) {
-          MySwal.fire("Success",  `${buyPlan.isActivate ? "Disactivate" : "Activate"}`, "success");
+          MySwal.fire("Success",  `${buyPlan.isActivate ? "Deactivate" : "Activate"}`, "success");
         } else {
           MySwal.fire("Error", "Internel Issue. Please try again.", "error");
         }
       } else if (result.dismiss === MySwal.DismissReason.cancel) {
-        MySwal.fire("Cancelled", `${buyPlan.isActivate ? "Disactivate" : "Activate"} Process failed`, "error");
+        MySwal.fire("Cancelled", `${buyPlan.isActivate ? "Deactivate" : "Activate"} Process failed`, "error");
       }
     });
   };
@@ -62,7 +62,7 @@ function PlanLimit() {
                 } relative drop-shadow-xl mr-8 mx-auto text-center w-3/4 md:w-2/5 bg-white rounded-lg p-4 m-4`}
               >
                 <button onClick={() => changeActivity(planData)} className="bg-blue-500 absolute button-full-opacity text-white px-4 py-2 rounded top-3 right-3">
-                  Activate Plan
+                {planData.isActivate ? "Deactivate" : "Activate"}
                 </button>
                 {planData.Plan.files !== 0 && (
                   <>
@@ -81,7 +81,7 @@ function PlanLimit() {
                       <div className="overflow-hidden w-full h-2 mb-4 text-xs flex rounded bg-blue-200">
                         <div
                           style={{
-                            width: `${planData.leftFiles * (100 / planData.Plan.files)}%`,
+                            width: `${planData.Plan.files - planData.leftFiles * (100 / planData.Plan.files)}%`,
                           }}
                           className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500 transition-all duration-500 ease-in-out"
                         ></div>
@@ -108,7 +108,7 @@ function PlanLimit() {
                       <div className="overflow-hidden w-full h-2 mb-4 text-xs flex rounded bg-blue-200">
                         <div
                           style={{
-                            width: `${planData.leftData * (100 / planData.Plan.data)}%`,
+                            width: `${planData.Plan.data - planData.leftData * (100 / planData.Plan.data)}%`,
                           }}
                           className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500 transition-all duration-500 ease-in-out"
                         ></div>
@@ -135,7 +135,7 @@ function PlanLimit() {
                       <div className="overflow-hidden w-full h-2 mb-4 text-xs flex rounded bg-blue-200">
                         <div
                           style={{
-                            width: `${planData.leftValidity * (100 / planData.Plan.days)}%`,
+                            width: `${planData.Plan.days - planData.leftValidity * (100 / planData.Plan.days)}%`,
                           }}
                           className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500 transition-all duration-500 ease-in-out"
                         ></div>
