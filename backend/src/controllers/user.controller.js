@@ -2,6 +2,8 @@ const User = require("../Model/user.model");
 const Plan = require("../Model/plan.model")
 const File = require("../Model/file.model");
 const BuyPlan = require("../Model/BuyPlan.model")
+const { MongoClient } = require('mongodb');
+
 const register = async (req, res) => {
   try {
     const user = req.body;
@@ -48,9 +50,11 @@ const addPlan = async (req, res) => {
 
     const email = user.emailAddresses[0].emailAddress;
     const username = user.username;
+
     const checkUser = await User.findOne({
       $or: [{ email }, { username }],
     });
+
     if (!checkUser)
       return res.status(400).json({ message: "User doesn't exist" });
 
@@ -65,6 +69,7 @@ const addPlan = async (req, res) => {
       leftValidity : findPlan.days,
       isCurrent : true
     })
+
     if(!createSubPlan)
        return res.status(500).json({message : "Internel Issues"})
 
@@ -77,51 +82,46 @@ const addPlan = async (req, res) => {
         new: true,
       }
     );
+
     if (!addedPlan)
       return res.status(500).json({ message: "Interenal Issue " });
+
     res
       .status(200)
       .json({ addedPlan, message: "Sucessfully updated new plan" });
+
   } catch (error) {
+
     console.log("addPlan", error);
+
   }
 };
 
 // current plan update for uses a plan so we have to 
 // decrease plan limit
 const updateValidity = async(req, res) => {
-  try {
-    const user = req.body;
-    if (!user)
-      return res.status(400).json({ message: "insufficient data" });
-    const email = user.emailAddresses[0].emailAddress;
-    const username = user.username;
-    const existUser = await User.findOne({
-      $or: [{ email }, { username }],
-    });
+  async function decrementData() {
+    const uri = process.env.URI; // Replace with your MongoDB connection string
+    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
   
-    if (!existUser)
-      return res
-        .status(400)
-        .json({ message: "User doesn't exist" });
-    
-    const findCurrentPlans = await  BuyPlan.find({
-      $and : [!{isCurrent : false}, !{leftValidity : 0}]
-    })
-
-    if(!findCurrentPlans)
-       res.status(400).json({message: "your all plans validity has been finished"})
-    
-    findCurrentPlans.forEach(element => {
-      element.leftValidity =  element.leftValidity - 1
-    });
- //! doubt to implement...
-
-  } catch (error) {
-     console.log("updateValidity", error);
+    try {
+      await client.connect();
+      const database = client.db('InShare'); // Replace with your database name
+      const collection = database.collection('BuyPlan');
+  
+      const result = await collection.updateMany(
+        { leftValidity: { $gt: 0 } }, // Only update documents where data is greater than 0
+        { $inc: { leftValidity: -1 } } // Decrement the data field by 1
+      );
+  
+      console.log(`${result.modifiedCount} document(s) were updated.`);
+    }catch(error) {
+      console.error(`updateValidity ${error}`);
+    } finally {
+      await client.close();
+    }
   }
-
-       
+  
 }
 
 //!
