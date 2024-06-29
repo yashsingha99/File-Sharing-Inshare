@@ -69,9 +69,11 @@ function Premium() {
                   <div className="flex px-4 mt-8 justify-between w-full">
                     <div>
                       <h4 className="md:text-lg text-sm">
-                        ₹{prevPlan.Plan.rupees}{prevPlan.Plan.data != 0 && ` - ${prevPlan.Plan.data}MB/pack`} - 
-                        {prevPlan.Plan.days} day
-                      </h4> 
+                        ₹{prevPlan.Plan.rupees}
+                        {prevPlan.Plan.data != 0 &&
+                          ` - ${prevPlan.Plan.data}MB/pack`}{" "}
+                        -{prevPlan.Plan.days} day
+                      </h4>
                       <h4 className="text-gray-500 md:text-sm text-xs">
                         Recharged ₹{prevPlan.Plan.rupees} on {time}
                       </h4>
@@ -91,7 +93,7 @@ function Premium() {
       width: "30rem",
       padding: "20px",
       showCloseButton: true,
-      showConfirmButton:false
+      showConfirmButton: false,
     });
   };
 
@@ -179,141 +181,154 @@ function Premium() {
       jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
     });
   };
-
-  return (
-    <>
-      <section className="flex ml-8 gap-4 App-scroll flex flex-col  h-full items-center w-full mx-auto bg-gray-100 body-font ">
-        <div className=" w-5/6 mt-24">
-          <div className="flex justify-between mb-4">
-            <h2 className="font-medium md:text-xl text-lg">
-              Previous Recharges
-            </h2>
-            {allBoughtPlan && (
-              <div
-                onClick={viewAllPreRecharge}
-                className=" cursor-pointer text-cyan-500 font-medium"
-              >
-                View All
-              </div>
-            )}
-          </div>
-          <div className="md:w-3/4  w-full mx-auto">
-            {allBoughtPlan ? (
-              allBoughtPlan.slice(0, 2).map((prevPlan, i) => {
-                console.log(prevPlan);
-                const time = convertTimeAndDate(prevPlan.createdAt).split(
-                  ","
-                )[0];
-                return (
-                  <div
-                    key={i}
-                    className=" bg-white mb-4  pb-4 rounded-xl  border   w-full"
-                  >
-                    {prevPlan.isCurrent && (
-                      <span className=" bg-cyan-500 text-white px-3 py-1 tracking-widest text-xs rounded-l">
-                        CURRENT PLAN
-                      </span>
-                    )}
-                    <div className="flex px-4 justify-between w-full">
-                      <div>
-                        <h2 className="font-medium">
-                          ₹{prevPlan.Plan.rupees} - {prevPlan.Plan.data}MB/pack
-                          - {prevPlan.Plan.days} day
-                        </h2>
-                        <h4 className="text-gray-500 text-xs text-medium md:text-sm ">
-                          Recharged ₹{prevPlan.Plan.rupees} on {time}
-                        </h4>
+  if (allBoughtPlan)
+    return (
+      <>
+        <section className="flex ml-8 gap-4 App-scroll flex flex-col  h-full items-center w-full mx-auto bg-gray-100 body-font ">
+          <div className=" w-5/6 mt-24">
+            <div className="flex justify-between mb-4">
+              <h2 className="font-medium md:text-xl text-lg">
+                Previous Recharges
+              </h2>
+              {allBoughtPlan && (
+                <div
+                  onClick={viewAllPreRecharge}
+                  className=" cursor-pointer text-cyan-500 font-medium"
+                >
+                  View All
+                </div>
+              )}
+            </div>
+            <div className="md:w-3/4  w-full mx-auto">
+              {allBoughtPlan ? (
+                allBoughtPlan.slice(0, 2).map((prevPlan, i) => {
+                  console.log(prevPlan);
+                  const time = convertTimeAndDate(prevPlan.createdAt).split(
+                    ","
+                  )[0];
+                  return (
+                    <div
+                      key={i}
+                      className=" bg-white mb-4  pb-4 rounded-xl  border   w-full"
+                    >
+                      {prevPlan.isCurrent && (
+                        <span className=" bg-cyan-500 text-white px-3 py-1 tracking-widest text-xs rounded-l">
+                          CURRENT PLAN
+                        </span>
+                      )}
+                      <div className="flex px-4 justify-between w-full">
+                        <div>
+                          <h2 className="font-medium">
+                            ₹{prevPlan.Plan.rupees} - {prevPlan.Plan.data}
+                            MB/pack - {prevPlan.Plan.days} day
+                          </h2>
+                          <h4 className="text-gray-500 text-xs text-medium md:text-sm ">
+                            Recharged ₹{prevPlan.Plan.rupees} on {time}
+                          </h4>
+                        </div>
+                        <button
+                          onClick={() => handleBuy(prevPlan)}
+                          className="px-4 py-1 rounded-full text-white bg-cyan-500 active:bg-cyan-400 hover:bg-cyan-700  bg-cyan-500"
+                        >
+                          Repeat
+                        </button>
                       </div>
-                      <button
-                        onClick={() => handleBuy(prevPlan)}
-                        className="px-4 py-1 rounded-full text-white bg-cyan-500 active:bg-cyan-400 hover:bg-cyan-700  bg-cyan-500"
-                      >
-                        Repeat
-                      </button>
                     </div>
-                  </div>
-                );
-              })
-            ) : (
-              <BigShadowedWord child={"No Previous Plan"} />
-            )}
+                  );
+                })
+              ) : (
+                <BigShadowedWord child={"No Previous Plan"} />
+              )}
+            </div>
           </div>
-        </div>
-        <div className="w-full App-scroll h-full  flex justify-center  bg-white p-4">
-          <div className="w-4/5 h-full">
-            <div
-              style={{ border: "1px solid rgb(6 182 212)" }}
-              className=" w-full bg-white flex  justify-end items-center rounded-xl"
-            >
-              <SearchIcon className="ml-4" />
-              <input
-                type="text"
-                placeholder="Search a Plan, e.g. 245 or 20 files"
-                className=" md:text-xl text-sm  p-4 outline-none rounded-3xl w-full"
-              />
-              {/* <div className="text-2xl text-cyan-500">
+          <div className="w-full App-scroll h-full  flex justify-center  bg-white p-4">
+            <div className="w-4/5 h-full">
+              <div
+                style={{ border: "1px solid rgb(6 182 212)" }}
+                className=" w-full bg-white flex  justify-end items-center rounded-xl"
+              >
+                <SearchIcon className="ml-4" />
+                <input
+                  type="text"
+                  placeholder="Search a Plan, e.g. 245 or 20 files"
+                  className=" md:text-xl text-sm  p-4 outline-none rounded-3xl w-full"
+                />
+                {/* <div className="text-2xl text-cyan-500">
                 <AutofpsSelectIcon  />
               </div> */}
-            </div>
-            <div className="text-cyan-500  mb-2 pb-4 text-2xl">
-              <TuneIcon className="" />
-            </div>
-            <div className="md:w-full mx-auto w-5/6 flex flex-col md:items-end">
-              {allPlan &&
-                allPlan.map((plan, i) => {
-                  if (plan.rupees !== 0)
-                    return (
-                      <div
-                        key={i}
-                        className="mb-4 primBorder justify-between h-20 border-b w-full flex "
-                      >
-                        <div className="md:w-8 w-4">
-                          <h1 className="font-medium text-lg md:text-xl">
-                            ₹{plan.rupees}
-                          </h1>
-                        </div>
-                        <div className="flex w-5/6 justify-around">
-                          {plan.days !== 0 && (
-                            <div className="text-center">
-                              <div className="text-sm text-gray-600">
-                                Validity
+              </div>
+              <div className="text-cyan-500  mb-2 pb-4 text-2xl">
+                <TuneIcon className="" />
+              </div>
+              <div className="md:w-full mx-auto w-5/6 flex flex-col md:items-end">
+                {allPlan &&
+                  allPlan.map((plan, i) => {
+                    if (plan.rupees !== 0)
+                      return (
+                        <div
+                          key={i}
+                          className="mb-4 primBorder justify-between h-20 border-b w-full flex "
+                        >
+                          <div className="md:w-8 w-4">
+                            <h1 className="font-medium text-lg md:text-xl">
+                              ₹{plan.rupees}
+                            </h1>
+                          </div>
+                          <div className="flex w-5/6 justify-around">
+                            {plan.days !== 0 && (
+                              <div className="text-center">
+                                <div className="text-sm text-gray-600">
+                                  Validity
+                                </div>
+                                <div className="text-sm ">{plan.days} day</div>
                               </div>
-                              <div className="text-sm ">{plan.days} day</div>
-                            </div>
-                          )}
-                          {plan.data !== 0 && (
-                            <div>
-                              <div className="text-sm text-gray-600">Data</div>
-                              <div className="text-sm">
-                                {plan.data} MB/Pack
+                            )}
+                            {plan.data !== 0 && (
+                              <div>
+                                <div className="text-sm text-gray-600">
+                                  Data
+                                </div>
+                                <div className="text-sm">
+                                  {plan.data} MB/Pack
+                                </div>
                               </div>
-                            </div>
-                          )}
-                          {plan.files !== 0 && (
-                            <div>
-                              <div className="text-sm text-gray-600">File</div>
-                              <div className="text-sm ">
-                                {plan.files} Files/pack
+                            )}
+                            {plan.files !== 0 && (
+                              <div>
+                                <div className="text-sm text-gray-600">
+                                  File
+                                </div>
+                                <div className="text-sm ">
+                                  {plan.files} Files/pack
+                                </div>
                               </div>
+                            )}
+                            <div className="text-xl font">
+                              {/* <button className=" p-3 rounded-full text-white bg-cyan-500" >Recharge</button> */}
+                              <ChevronRightIcon
+                                className="cursor-pointer text-xl"
+                                onClick={() => handleBuy(plan)}
+                              />
                             </div>
-                          )}
-                          <div className="text-xl font">
-                            {/* <button className=" p-3 rounded-full text-white bg-cyan-500" >Recharge</button> */}
-                            <ChevronRightIcon
-                              className="cursor-pointer text-xl"
-                              onClick={() => handleBuy(plan)}
-                            />
                           </div>
                         </div>
-                      </div>
-                    );
-                })}
+                      );
+                  })}
+              </div>
             </div>
           </div>
-        </div>
+        </section>
+      </>
+    );
+  else
+    return (
+      <section className="flex ml-8 justify-center flex-col  h-full items-center w-full mx-auto bg-gray-100 body-font ">
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/inshare-49986.appspot.com/o/files%2FWait.GIF?alt=media&token=df841df7-16bb-45e1-b9af-5fe9ca094945"
+          alt=""
+        />
       </section>
-    </>
-  );
+    );
 }
 
 export default Premium;

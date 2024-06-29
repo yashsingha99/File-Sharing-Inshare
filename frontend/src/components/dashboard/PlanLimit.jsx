@@ -25,6 +25,7 @@ function PlanLimit() {
 
   
   const changeActivity = (buyPlan) => {
+    setChange((p) => p)
     MySwal.fire({
       title: "Are you sure?",
       text: `Do you really want to ${buyPlan.isActivate ? "Deactivate" : "Activate"}  this plan?`,
@@ -37,7 +38,7 @@ function PlanLimit() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         const res = await changeisActivate(buyPlan)
-        setChange((p) => !p)
+        setChange((p) => p)
         if (res.status == 200) {
           MySwal.fire("Success",  `${buyPlan.isActivate ? "Deactivate" : "Activate"}`, "success");
         } else {
@@ -45,8 +46,8 @@ function PlanLimit() {
         }
       } else if (result.dismiss === MySwal.DismissReason.cancel) {
         MySwal.fire("Cancelled", `${buyPlan.isActivate ? "Deactivate" : "Activate"} Process failed`, "error");
-      }
-    });
+      }});
+    setChange((p) => p)
   };
 if(allBoughtPlan)
   return (
@@ -79,7 +80,7 @@ if(allBoughtPlan)
                       </p>
                       <div className="flex mx-auto w-1/6 mb-2 items-center justify-between"></div>
                       <div className="overflow-hidden w-full h-2 mb-4 text-xs flex rounded bg-blue-200">
-                        <div
+                        <div 
                           style={{
                             width: `${planData.Plan.files - planData.leftFiles * (100 / planData.Plan.files)}%`,
                           }}
