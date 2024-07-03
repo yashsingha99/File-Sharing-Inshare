@@ -56,39 +56,7 @@ function History() {
       }
     });
   };
-  if (!allFile)
-    return (
-      <div className="mt-20 container w-full py-8 mt-20 text-center">
-        <Container>
-          <div className="  flex flex-wrap">
-            <div className="p-2 w-full">
-              <h1>You haven't post yet</h1>
-              <h1 className="text-2xl flex justify-center items-center font-bold hover:text-gray-500">
-                {/* <img src={img1} className="h-50 w-50" alt="" /> */}
-              </h1>
-            </div>
-          </div>
-        </Container>
-      </div>
-    );
- const items = [
-  { 
-    subtitle : "aasadas",
-    title : "daasaa"
-  },
-  { 
-    subtitle : "aasadas",
-    title : "daasaa"
-  },
-  { 
-    subtitle : "aasadas",
-    title : "daasaa"
-  },
-  { 
-    subtitle : "aasadas",
-    title : "daasaa"
-  },
- ]
+ if(allFile)
   return (
     <section className=" w-full text-gray-600 flex justify-center">
       <div className=" px-5 py-24 w-5/6  flex  flex-col">
@@ -179,6 +147,15 @@ function History() {
           </motion.div>
         )}
       </AnimatePresence> */}
+    </section>
+  )
+  else 
+    return (
+    <section className="flex ml-8 justify-center flex-col  h-full items-center w-full mx-auto bg-gray-100 body-font ">
+      <img
+        src="https://firebasestorage.googleapis.com/v0/b/inshare-49986.appspot.com/o/files%2FWait.GIF?alt=media&token=df841df7-16bb-45e1-b9af-5fe9ca094945"
+        alt=""
+      />
     </section>
   );
 }

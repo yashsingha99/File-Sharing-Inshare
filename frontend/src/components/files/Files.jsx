@@ -26,12 +26,13 @@ function Files() {
   const [isUploadFile, setIsUploadFile] = useState(false);
   const [progress, setProgress] = useState(0);
   const [file, setFile] = useState();
+  const [allBoughtPlan, setAllBoughtPlan] = useState();
   const [fileType, setFileType] = useState("");
   const [fileId, setFileId] = useState("");
   const [isCopied, setIsCopied] = useState(false);
   const {user} = useUser();
+
   const path = "http://localhost:5173";
-  console.log(fileType);
 
   const [pageSize, setPageSize] = useState({
     width: window.innerWidth,
@@ -50,6 +51,14 @@ function Files() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const resPlan = await fetchPurchashedPlans(user);
+      setAllBoughtPlan(resPlan.data.result.BuyPlan);
+    };
+    user && fetch();
+  }, [user, location]);
 
   const uploadFile = async (snapshot, downloadURL) => {
     if(user){
@@ -99,16 +108,23 @@ function Files() {
     }, [3000]);
     setIsCopied(true);
   };
+  
+  const chackIsAbleToUpload = () => {
 
+   }
+   
   const handleClick = () => {
+    chackIsAbleToUpload();
    try {
      const imgRef = ref(storage, `files/${v4()}`);
      const uploadTask = uploadBytesResumable(imgRef, file[0], file[0].type);
  
-     uploadTask.on("state_changed", async (snapshot) => {
+       uploadTask.on("state_changed", async (snapshot) => {
        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+
        setProgress(progress.toFixed(2));
        setFileType(snapshot.metadata.contentType);
+
        if (progress === 100) {
          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
  
