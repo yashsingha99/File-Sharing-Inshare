@@ -3,6 +3,7 @@ const Plan = require("../Model/plan.model")
 const File = require("../Model/file.model");
 const BuyPlan = require("../Model/BuyPlan.model")
 const { MongoClient } = require('mongodb');
+const cron = require('node-cron');
 
 const register = async (req, res) => {
   try {
@@ -194,6 +195,36 @@ const fetchPurchashedPlans = async (req, res) => {
 };
 
 
+
+// MongoDB connection URI
+const URI = process.env.URI;
+const client = new MongoClient(URI);
+
+async function decrementAttribute() {
+  try {
+    await client.connect();
+    const database = client.db('InShare');
+
+    const currentDate = new Date();
+    const oneDayAgo = new Date(currentDate.getTime() - 24*60*60*1000);
+
+    await BuyPlan.updateMany(
+      { "lastUpdated": { $lte: oneDayAgo } },
+      {
+        $inc: { "leftValidity": -1 },
+        $set: { "lastUpdated": currentDate }
+      }
+    );
+
+    console.log('Attributes decremented successfully');
+  } finally {
+    await client.close();
+  }
+}
+
+cron.schedule('0 * * * *', () => {
+  decrementAttribute().catch(console.error);
+});
 
 module.exports = {
   register,

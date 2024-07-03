@@ -150,11 +150,14 @@ if(allBoughtPlan)
       </div>
     </div>
   );
-  else return (
-    <>
-     {/* <img src={pay} alt="" /> */}
-    </>
-  )
+  else  return (
+    <section className="flex ml-8 justify-center flex-col  h-full items-center w-full mx-auto bg-gray-100 body-font ">
+      <img
+        src="https://firebasestorage.googleapis.com/v0/b/inshare-49986.appspot.com/o/files%2FWait.GIF?alt=media&token=df841df7-16bb-45e1-b9af-5fe9ca094945"
+        alt=""
+      />
+    </section>
+  );
 }
 
 export default PlanLimit;
