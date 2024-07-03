@@ -98,8 +98,8 @@ const addPlan = async (req, res) => {
   }
 };
 
-// current plan update for uses a plan so we have to 
-// decrease plan limit
+  // current plan update for uses a plan so we have to 
+  // decrease plan limit
 const updateValidity = async(req, res) => {
     const uri = process.env.URI; // Replace with your MongoDB connection string
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -193,8 +193,6 @@ const fetchPurchashedPlans = async (req, res) => {
     console.log("fetchPurchashedPlans", error);
   }
 };
-
-
 
 // MongoDB connection URI
 const URI = process.env.URI;

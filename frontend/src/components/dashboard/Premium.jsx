@@ -21,6 +21,7 @@ function Premium() {
   const [isbuy, setIsBuy] = useState(true);
   const [allPlan, setAllPlan] = useState();
   const [allBoughtPlan, setAllBoughtPlan] = useState();
+  const [planSearch, setPlanSearch] = useState();
   const location = useLocation();
   const { user } = useUser();
 
@@ -204,7 +205,7 @@ function Premium() {
                 allBoughtPlan.slice(0, 2).map((prevPlan, i) => {
                   console.log(prevPlan);
                   const time = convertTimeAndDate(prevPlan.createdAt).split(
-                    ","
+                   ","
                   )[0];
                   return (
                     <div
@@ -250,12 +251,11 @@ function Premium() {
                 <SearchIcon className="ml-4" />
                 <input
                   type="text"
+                  value={planSearch}
+                  onChange={(e) => setPlanSearch(e.target.value)}
                   placeholder="Search a Plan, e.g. 245 or 20 files"
                   className=" md:text-xl text-sm  p-4 outline-none rounded-3xl w-full"
                 />
-                {/* <div className="text-2xl text-cyan-500">
-                <AutofpsSelectIcon  />
-              </div> */}
               </div>
               <div className="text-cyan-500  mb-2 pb-4 text-2xl">
                 <TuneIcon className="" />
@@ -263,7 +263,7 @@ function Premium() {
               <div className="md:w-full mx-auto w-5/6 flex flex-col md:items-end">
                 {allPlan &&
                   allPlan.map((plan, i) => {
-                    if (plan.rupees !== 0)
+                    if (plan.rupees !== 0 || plan.rupees === planSearch || plan.days)
                       return (
                         <div
                           key={i}
