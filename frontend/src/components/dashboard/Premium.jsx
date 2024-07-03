@@ -21,7 +21,7 @@ function Premium() {
   const [isbuy, setIsBuy] = useState(true);
   const [allPlan, setAllPlan] = useState();
   const [allBoughtPlan, setAllBoughtPlan] = useState();
-  const [planSearch, setPlanSearch] = useState();
+  const [planSearch, setPlanSearch] = useState("");
   const location = useLocation();
   const { user } = useUser();
 
@@ -314,9 +314,10 @@ function Premium() {
                         </div>
                       );
                     else if (
-                      plan.rupees === planSearch ||
-                      plan.days === planSearch ||
-                      `${plan.data} MB/Pack` === planSearch
+                      (plan.rupees + "").includes(planSearch) ||
+                      (plan.days + " day").includes(planSearch) ||
+                      (`${plan.data} MB`).includes(planSearch) || 
+                      (`${plan.files} files`).includes(planSearch)
                     ) {
                       return (
                         <div
