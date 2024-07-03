@@ -205,7 +205,7 @@ function Premium() {
                 allBoughtPlan.slice(0, 2).map((prevPlan, i) => {
                   console.log(prevPlan);
                   const time = convertTimeAndDate(prevPlan.createdAt).split(
-                   ","
+                    ","
                   )[0];
                   return (
                     <div
@@ -263,7 +263,7 @@ function Premium() {
               <div className="md:w-full mx-auto w-5/6 flex flex-col md:items-end">
                 {allPlan &&
                   allPlan.map((plan, i) => {
-                    if (plan.rupees !== 0 || plan.rupees === planSearch || plan.days)
+                    if (plan.rupees !== 0 && planSearch === "")
                       return (
                         <div
                           key={i}
@@ -313,6 +313,60 @@ function Premium() {
                           </div>
                         </div>
                       );
+                    else if (
+                      plan.rupees === planSearch ||
+                      plan.days === planSearch ||
+                      `${plan.data} MB/Pack` === planSearch
+                    ) {
+                      return (
+                        <div
+                          key={i}
+                          className="mb-4 primBorder justify-between h-20 border-b w-full flex "
+                        >
+                          <div className="md:w-8 w-4">
+                            <h1 className="font-medium text-lg md:text-xl">
+                              ₹{plan.rupees}
+                            </h1>
+                          </div>
+                          <div className="flex w-5/6 justify-around">
+                            {plan.days !== 0 && (
+                              <div className="text-center">
+                                <div className="text-sm text-gray-600">
+                                  Validity
+                                </div>
+                                <div className="text-sm ">{plan.days} day</div>
+                              </div>
+                            )}
+                            {plan.data !== 0 && (
+                              <div>
+                                <div className="text-sm text-gray-600">
+                                  Data
+                                </div>
+                                <div className="text-sm">
+                                  {plan.data} MB/Pack
+                                </div>
+                              </div>
+                            )}
+                            {plan.files !== 0 && (
+                              <div>
+                                <div className="text-sm text-gray-600">
+                                  File
+                                </div>
+                                <div className="text-sm ">
+                                  {plan.files} Files/pack
+                                </div>
+                              </div>
+                            )}
+                            <div className="text-xl font">
+                              <ChevronRightIcon
+                                className="cursor-pointer text-xl"
+                                onClick={() => handleBuy(plan)}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    }
                   })}
               </div>
             </div>
