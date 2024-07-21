@@ -204,7 +204,7 @@ async function decrementAttribute() {
     const database = client.db('InShare');
 
     const currentDate = new Date();
-    const oneDayAgo = new Date(currentDate.getTime() - 24*60*60*1000);
+    const oneDayAgo = new Date(currentDate.getTime() - 30 * 1000);
 
     await BuyPlan.updateMany(
       { "lastUpdated": { $lte: oneDayAgo } },
@@ -220,7 +220,7 @@ async function decrementAttribute() {
   }
 }
 
-cron.schedule('0 * * * *', () => {
+cron.schedule('* * * * *', () => {
   decrementAttribute().catch(console.error);
 });
 
