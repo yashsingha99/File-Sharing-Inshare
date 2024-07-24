@@ -1,6 +1,6 @@
 const {Router} = require('express')
-const {register, changeisActivate, login, addPlan, fetchPurchashedPlans, fetchPlan} = require('../controllers/user.controller')
 const router = Router();
+const {register, changeisActivate, login, addPlan, fetchPurchashedPlans, fetchPlan} = require('../controllers/user.controller')
 
 
 router.post('/register', register)
