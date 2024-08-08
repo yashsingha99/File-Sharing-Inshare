@@ -1,7 +1,7 @@
 const User = require("../Model/user.model");
 const File = require("../Model/file.model");
 const Plan = require("../Model/plan.model");
-
+const BuyPlan = require("../Model/BuyPlan.model")
 const createPlan = async (req, res) => {
   try {
     const {days, files ,data, rupees } = req.body
@@ -76,6 +76,17 @@ try {
   console.log("fetchAllPlans", error);
 }
 };
+
+const fetchActivatedPlan = async (req, res) => {
+  try {
+    const allPlans = await BuyPlan.findOne({isActivate})
+    if(!allPlans) 
+       return res.status(400).json({message : "plan doesn't exist"})
+    res.status(200).json({allPlans, message : "sucessfully Plan fetched"})
+} catch (error) {
+  console.log("fetchAllPlans", error);
+}
+}
 
 module.exports = {
   createPlan,

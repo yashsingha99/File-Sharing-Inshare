@@ -12,7 +12,8 @@ function PlanLimit() {
   const [allBoughtPlan, setAllBoughtPlan] = useState();
   const [change, setChange] = useState(false);
   const location = useLocation();
- 
+  const [isActivate, setIsActivate] = useState(-1)
+
   useEffect(() => {
     const fetch = async () => {
       const resPlan = await fetchPurchashedPlans(user);
@@ -22,10 +23,20 @@ function PlanLimit() {
     user && fetch();
   }, [user, location, change]);
 
-
   
-  const changeActivity = (buyPlan) => {
+  const changeActivity = (buyPlan, i) => {
+    if(isActivate) {
+      MySwal.fire({
+        title: "You cann't activate your plan more than once",
+        icon: "info",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        confirmButtonColor: "#d33",
+      })
+      return;
+    }
     setChange((p) => p)
+    setIsActivate(i)
     MySwal.fire({
       title: "Are you sure?",
       text: `Do you really want to ${buyPlan.isActivate ? "Deactivate" : "Activate"}  this plan?`,
@@ -62,7 +73,7 @@ if(allBoughtPlan)
                   !planData.isActivate && 'opacity-25'
                 } relative drop-shadow-xl mr-8 mx-auto text-center w-3/4 md:w-2/5 bg-white rounded-lg p-4 m-4`}
               >
-                <button onClick={() => changeActivity(planData)} className="bg-blue-500 absolute button-full-opacity text-white px-4 py-2 rounded top-3 right-3">
+                <button onClick={() => changeActivity(planData, i)} className="bg-blue-500 absolute button-full-opacity text-white px-4 py-2 rounded top-3 right-3">
                 {planData.isActivate ? "Deactivate" : "Activate"}
                 </button>
                 {planData.Plan.files !== 0 && (
@@ -124,7 +135,7 @@ if(allBoughtPlan)
                     </h1>
                     <div className="w-full text-start">
                       <span className="font-bold">
-                        {planData.leftValidity.toFixed(2)} Days
+                        {planData.leftValidity.toFixed(0)} Days
                       </span>
                       <span className="text-gray-600 text-sm"> left</span>
                     </div>

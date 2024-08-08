@@ -52,8 +52,6 @@ const addFile = async (req, res) => {
   }
 };
 
-
-
 const updatePassword = async (req, res) => {
   try 
   {

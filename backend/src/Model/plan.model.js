@@ -33,5 +33,4 @@ const planSchema = mongoose.Schema(
 )
 
 const Plan = mongoose.model("Plan", planSchema)
-
 module.exports = Plan

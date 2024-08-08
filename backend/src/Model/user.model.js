@@ -1,15 +1,17 @@
 const mongoose = require("mongoose");
 
-const fileModel = mongoose.Schema(
+const userSchema = mongoose.Schema(
   {
     username: {
       type: String,
       required : true
     },
+
     email : {
       type: String,
       required : true
     },
+    
     files : [
         {
             type: mongoose.Schema.Types.ObjectId,
@@ -26,6 +28,5 @@ const fileModel = mongoose.Schema(
   { timestamps: true }
 );
 
-
-const File = mongoose.model("File", fileModel);
-module.exports = File;
+const User = mongoose.model("User", userSchema);
+module.exports = User;

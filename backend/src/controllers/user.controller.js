@@ -194,35 +194,35 @@ const fetchPurchashedPlans = async (req, res) => {
   }
 };
 
-// MongoDB connection URI
-const URI = process.env.URI;
-const client = new MongoClient(URI);
+// // MongoDB connection URI
+// const URI = process.env.URI;
+// const client = new MongoClient(URI);
 
-async function decrementAttribute() {
-  try {
-    await client.connect();
-    const database = client.db('InShare');
+// async function decrementAttribute() {
+//   try {
+//     await client.connect();
+//     const database = client.db('InShare');
 
-    const currentDate = new Date();
-    const oneDayAgo = new Date(currentDate.getTime() - 30 * 1000);
+//     const currentDate = new Date();
+//     const oneDayAgo = new Date(currentDate.getTime() - 30 * 1000);
 
-    await BuyPlan.updateMany(
-      { "lastUpdated": { $lte: oneDayAgo } },
-      {
-        $inc: { "leftValidity": -1 },
-        $set: { "lastUpdated": currentDate }
-      }
-    );
+//     await BuyPlan.updateMany(
+//       { "lastUpdated": { $lte: oneDayAgo } },
+//       {
+//         $inc: { "leftValidity": -1 },
+//         $set: { "lastUpdated": currentDate }
+//       }
+//     );
 
-    console.log('Attributes decremented successfully');
-  } finally {
-    await client.close();
-  }
-}
+//     console.log('Attributes decremented successfully');
+//   } finally {
+//     await client.close();
+//   }
+// }
 
-cron.schedule('* * * * *', () => {
-  decrementAttribute().catch(console.error);
-});
+// cron.schedule('* * * * *', () => {
+//   decrementAttribute().catch(console.error);
+// });
 
 module.exports = {
   register,
