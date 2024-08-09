@@ -74,7 +74,7 @@ const fetchAllPlans = async (req, res) => {
   }
 };
 
-const fetchActivatedPlan = async (req, res) => {
+const fetchActivatedBuyPlan = async (req, res) => {
   try {
     const { username, email } = req.body;
     if (!username && !email) {
@@ -107,5 +107,5 @@ module.exports = {
   updatePlan,
   deletePlan,
   fetchAllPlans,
-  fetchActivatedPlan,
+  fetchActivatedBuyPlan,
 };

@@ -96,6 +96,12 @@ export const decreaseValidity = async (data) => {
 };
 
 
-export const fetchActivatedBuyPlan = async () => {
-  
+export const fetchActivatedBuyPlan = async (data) => {
+  try {
+    const res = await axios.post(`${URI}/api/user/fetchActivatedBuyPlan`, data)
+    console.log(res);
+    return res;
+  } catch (error) {
+     console.log("fetchActivatedBuyPlan", error);
+  }
 }
