@@ -26,7 +26,8 @@ function History() {
     };
     user && fetch();
   }, [user, location]);
-
+ console.log();
+ 
   const fetch = async () => {
     const res = await userFiles(user);
     setAllFile(res.data.data);
@@ -43,7 +44,7 @@ function History() {
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Proceed",
-      cancelButtonText: "Cancle",
+      cancelButtonText: "Cancel",
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
     }).then(async (result) => {
@@ -56,7 +57,8 @@ function History() {
       }
     });
   };
- if(allFile)
+
+ if(allFile.length === 0)
   return (
     <section className=" w-full text-gray-600 flex justify-center">
       <div className=" px-5 py-24 w-5/6  flex  flex-col">
@@ -152,10 +154,8 @@ function History() {
   else 
     return (
     <section className="flex ml-8 justify-center flex-col  h-full items-center w-full mx-auto bg-gray-100 body-font ">
-      <img
-        src="https://firebasestorage.googleapis.com/v0/b/inshare-49986.appspot.com/o/files%2FWait.GIF?alt=media&token=df841df7-16bb-45e1-b9af-5fe9ca094945"
-        alt=""
-      />
+      <h1 className="text-2xl" >Let's create history...</h1>
+      <button className="text-white bg-blue" >Share</button>
     </section>
   );
 }
