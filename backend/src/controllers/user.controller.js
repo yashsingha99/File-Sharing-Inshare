@@ -2,8 +2,7 @@ const User = require("../Model/user.model");
 const Plan = require("../Model/plan.model")
 const File = require("../Model/file.model");
 const BuyPlan = require("../Model/BuyPlan.model")
-const { MongoClient } = require('mongodb');
-const cron = require('node-cron');
+
 
 const register = async (req, res) => {
   try {
@@ -98,8 +97,7 @@ const addPlan = async (req, res) => {
   }
 };
 
-  // current plan update for uses a plan so we have to 
-  // decrease plan limit
+ 
 const updateValidity = async(req, res) => {
     const uri = process.env.URI; // Replace with your MongoDB connection string
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -120,10 +118,8 @@ const updateValidity = async(req, res) => {
     } finally {
       await client.close();
     }
-  }
+}
 
-
-//!
 const changeisActivate = async(req, res) => {
      const buyPlan = req.body
      if(!buyPlan) 
@@ -134,13 +130,12 @@ const changeisActivate = async(req, res) => {
           isActivate : !buyPlan.isActivate
         },
         {
-          new:true
+          new: true
         }
       )
 }
 
 
-//!
 const fetchPlan = async (req, res) => {
   try {
     const user = req.body;
@@ -165,7 +160,6 @@ const fetchPlan = async (req, res) => {
 };
 
 
-//!
 const fetchPurchashedPlans = async (req, res) => {
   try {
     const userdata = req.body;
@@ -193,36 +187,6 @@ const fetchPurchashedPlans = async (req, res) => {
     console.log("fetchPurchashedPlans", error);
   }
 };
-
-// // MongoDB connection URI
-// const URI = process.env.URI;
-// const client = new MongoClient(URI);
-
-// async function decrementAttribute() {
-//   try {
-//     await client.connect();
-//     const database = client.db('InShare');
-
-//     const currentDate = new Date();
-//     const oneDayAgo = new Date(currentDate.getTime() - 30 * 1000);
-
-//     await BuyPlan.updateMany(
-//       { "lastUpdated": { $lte: oneDayAgo } },
-//       {
-//         $inc: { "leftValidity": -1 },
-//         $set: { "lastUpdated": currentDate }
-//       }
-//     );
-
-//     console.log('Attributes decremented successfully');
-//   } finally {
-//     await client.close();
-//   }
-// }
-
-// cron.schedule('* * * * *', () => {
-//   decrementAttribute().catch(console.error);
-// });
 
 module.exports = {
   register,

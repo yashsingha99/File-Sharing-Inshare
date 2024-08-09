@@ -3,7 +3,7 @@ import { v4 } from "uuid";
 import CloseIcon from "@mui/icons-material/Close";
 import { getDownloadURL, uploadBytesResumable, ref } from "firebase/storage";
 import FileDrop from "./FileDrop";
-import { addFile, upadatePassword } from "../../api/api";
+import { addFile, fetchActivatedBuyPlan, upadatePassword } from "../../api/api";
 import { storage } from "../../firebase/config";
 import { useUser } from "@clerk/clerk-react";
 import { ButtonBase } from "@mui/material";
@@ -51,6 +51,14 @@ function Files() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const res = await fetchActivatedBuyPlan({});
+      
+
+    }
+  },[]) 
 
   useEffect(() => {
     const fetch = async () => {
@@ -110,11 +118,11 @@ function Files() {
   };
   
   const chackIsAbleToUpload = () => {
-
-   }
+     
+  }
    
   const handleClick = () => {
-    chackIsAbleToUpload();
+   chackIsAbleToUpload();
    try {
      const imgRef = ref(storage, `files/${v4()}`);
      const uploadTask = uploadBytesResumable(imgRef, file[0], file[0].type);

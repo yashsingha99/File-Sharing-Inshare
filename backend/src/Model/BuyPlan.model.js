@@ -33,7 +33,6 @@ const BuyPlanSchema = mongoose.Schema(
     },
     
   },
-
   {
     timestamps: true
   }

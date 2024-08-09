@@ -96,4 +96,6 @@ export const decreaseValidity = async (data) => {
 };
 
 
-// export const 
+export const fetchActivatedBuyPlan = async () => {
+  
+}
