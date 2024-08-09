@@ -55,6 +55,8 @@ function Files() {
 
   const fetch = async () => {
     const res = await fetchActivatedBuyPlan(user);
+    console.log(res);
+    
     return res;
   }
 
@@ -62,8 +64,8 @@ function Files() {
     const res = fetch()
     if(res.status == 400){
       MySwal.fire({
-        title: "You are not able to share file",
-        text: "",
+        title: "You are not able to share the file",
+        text: "first you have to purches a required plan for your file to share",
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "Click",

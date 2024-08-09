@@ -74,38 +74,11 @@ const fetchAllPlans = async (req, res) => {
   }
 };
 
-const fetchActivatedBuyPlan = async (req, res) => {
-  try {
-    const { username, email } = req.body;
-    if (!username && !email) {
-      return res.status(400).json("insufficient data");
-    }
 
-    const findUser = await User.findOne({
-      $or: [{ email }, { username }],
-    })
-      .populate("BuyPlan")
-      .exec((err, user) => {
-        if (err) {
-          return res.status(400).json({ message: "plan is not bought yet" });
-        } else {
-          return res
-            .status(200)
-            .json({
-              ActivatedBuyPlan: findUser.BuyPlan,
-              message: "sucessfully Plan fetched",
-            });
-        }
-      });
-  } catch (error) {
-    console.log("fetchAllPlans", error);
-  }
-};
 
 module.exports = {
   createPlan,
   updatePlan,
   deletePlan,
   fetchAllPlans,
-  fetchActivatedBuyPlan,
 };
