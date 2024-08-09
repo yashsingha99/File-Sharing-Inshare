@@ -16,6 +16,7 @@ import filesrc from "../../images/file.png";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { isAbleToShare } from "../../api/user.api";
+import { useNavigate } from "react-router-dom";
 const MySwal = withReactContent(Swal);
 
 function Files() {
@@ -31,7 +32,7 @@ function Files() {
   const [fileId, setFileId] = useState("");
   const [isCopied, setIsCopied] = useState(false);
   const {user} = useUser();
-
+  const navigate = useNavigate()
   const path = "http://localhost:5173";
 
   const [pageSize, setPageSize] = useState({
@@ -52,13 +53,33 @@ function Files() {
     };
   }, []);
 
-  useEffect(() => {
-    const fetch = async () => {
-      const res = await fetchActivatedBuyPlan({});
-      
+  const fetch = async () => {
+    const res = await fetchActivatedBuyPlan(user);
+    return res;
+  }
 
+  const chackIsAbleToUpload = () => {
+    const res = fetch()
+    if(res.status == 400){
+      MySwal.fire({
+        title: "You are not able to share file",
+        text: "",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Click",
+        confirmButtonColor: "#d33",
+      }).then(() => {
+        if (result.isConfirmed) {
+          navigate('/')
+        }
+      })
     }
-  },[]) 
+    else {
+      // continue;
+    }
+
+  
+  }
 
   useEffect(() => {
     const fetch = async () => {
@@ -117,9 +138,7 @@ function Files() {
     setIsCopied(true);
   };
   
-  const chackIsAbleToUpload = () => {
-     
-  }
+
    
   const handleClick = () => {
    chackIsAbleToUpload();
