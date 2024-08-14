@@ -163,7 +163,7 @@ const fetchPlan = async (req, res) => {
 const fetchPurchashedPlans = async (req, res) => {
   try {
     const userdata = req.body;
-    console.log(req.body);
+    // console.log(req.body);
     if (!userdata) return res.status(400).json({ message: "Insufficient data" });
     const email = userdata.email;
     const username = userdata.username;

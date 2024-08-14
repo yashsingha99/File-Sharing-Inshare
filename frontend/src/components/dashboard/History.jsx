@@ -109,8 +109,8 @@ function History() {
                     <div className="text-gray-400 text-center">
                       {(file.size / (1000 * 1000)).toFixed(2)} MB
                     </div>
-                  </div>
-                  <button
+                  </div> 
+                  <button 
                     onClick={() => handleOpen(file.path)}
                     className="hover:text-blue-600 ml-4 flex items-start flex-col leading-none"
                     onMouseEnter={() => setHover(i)}

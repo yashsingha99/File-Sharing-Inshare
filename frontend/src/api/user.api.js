@@ -20,14 +20,5 @@ export const changeisActivate = async (buyPlan) => {
   }
 };
 
-export const isAbleToShare = async (data) => {
-  try {
-    const userdata = {email : data.user.primaryEmailAddress.emailAddress, username : data.user.username}
-    const fileInfo = {userdata, size : data.size}
-    const res = await axios.post(`${URI}/api/user/isAbleToShare`, fileInfo);
-    return res;
-  } catch (error) {
-    console.log("isAbleToShare", error);
-  }
-};
+
 
