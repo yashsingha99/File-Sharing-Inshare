@@ -27,10 +27,6 @@ const BuyPlanSchema = mongoose.Schema(
       default: 0,
     },
 
-    leftValidity: {
-      type: Number,
-      default: 0,
-    },
     
   },
   {

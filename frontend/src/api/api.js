@@ -48,10 +48,10 @@ export const fetchFile = async (data) => {
 export const userFiles = async (user) => {
   try {
     const res = await axios.post(`${URI}/api/file/userFiles`, user);
-    console.log("fetchFile", res);
+    console.log("userFiles", res);
     return res;
   } catch (error) {
-    console.log("fetchFile", error);
+    console.log("userFiles", error);
   }
 };
 

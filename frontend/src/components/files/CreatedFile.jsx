@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useUser } from "@clerk/clerk-react";
 import axios from "axios";
 import "./file.css";
-import file from "../../images/file.png"
+import file from "../../images/file.png";
 import { fetchFile } from "../../api/api";
 function CreatedFile() {
   const user = useUser();
@@ -22,28 +22,32 @@ function CreatedFile() {
   }, []);
 
   const checkPassword = () => {
-    if (fileData.data.respond.password === password) setChecked(true);
-    else alert("password mismatched");
+    if (fileData.data.respond.password === password) {
+      setChecked(true);
+      window.location.replace(fileData.data.respond.path);
+    } else alert("password mismatched");
     setPassword("");
-    window.location.replace(fileData.data.respond.path);
   };
 
   return (
     <>
       <div className="  w-full bg-blue-100 h-screen flex items-center justify-center">
         <div className="md:w-1/3 w-2/3 file h-3/4 shadow-xl mt-8 rounded flex flex-col justify-evenly  bg-blue-300">
-          <div className="w-full flex justify-center" >
+          <div className="w-full flex justify-center">
             <img className="  h-4/5 w-1/2" src={file} alt="" />
           </div>
           <div className="w-full h-1/6 flex-col flex gap-8 items-center justify-center">
-            <input 
-            type="text" 
-            placeholder="paassword"
-            className="shadow-inset bg-blue-100 outline-none rounded py-2 px-2 w-1/2" 
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            <input
+              type="text"
+              placeholder="paassword"
+              className="shadow-inset bg-blue-100 outline-none rounded py-2 px-2 w-1/2"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
-            <button onClick={checkPassword}  className="w-1/4 bg-green-600 hover:bg-green-800  text-white py-2 px-4 rounded outline-none active:bg-green-500 ">
+            <button
+              onClick={checkPassword}
+              className="w-1/4 bg-green-600 hover:bg-green-800  text-white py-2 px-4 rounded outline-none active:bg-green-500 "
+            >
               {" "}
               submit{" "}
             </button>

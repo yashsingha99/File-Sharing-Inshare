@@ -12,8 +12,14 @@ const addFile = async (req, res) => {
     const email = user.emailAddresses.emailAddress;
 
     const checkUser = await User.findOne({
-      $or: [{ email }, { username }],
-    });
+      $or: [{ email }, { username }]
+    })
+      // .populate({
+      //   path: 'BuyPlan',
+      //   populate: {
+      //     path: 'Plan'
+      //   }
+      // });
 
     if (!checkUser) {
       return res.status(400).json({ message: "User doesn't found" });

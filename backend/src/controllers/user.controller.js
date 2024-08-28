@@ -1,8 +1,8 @@
 const User = require("../Model/user.model");
-const Plan = require("../Model/plan.model")
+const Plan = require("../Model/plan.model");
 const File = require("../Model/file.model");
-const BuyPlan = require("../Model/BuyPlan.model")
-
+const BuyPlan = require("../Model/BuyPlan.model");
+const stripe = require("stripe")(process.env.Secret_key);
 
 const register = async (req, res) => {
   try {
@@ -58,25 +58,24 @@ const addPlan = async (req, res) => {
     if (!checkUser)
       return res.status(400).json({ message: "User doesn't exist" });
 
-    const findPlan = await Plan.findById(plan._id)
-    if(!findPlan)
-        return res.status(400).json({message : "Plan doesn't exist"})
-    
-    const createSubPlan = await BuyPlan.create({
-      Plan : findPlan,
-      leftData : findPlan.data,
-      leftFiles : findPlan.files,
-      leftValidity : findPlan.days,
-      isCurrent : true
-    })
+    const findPlan = await Plan.findById(plan._id);
+    if (!findPlan)
+      return res.status(400).json({ message: "Plan doesn't exist" });
 
-    if(!createSubPlan)
-       return res.status(500).json({message : "Internel Issues"})
+    const createSubPlan = await BuyPlan.create({
+      Plan: findPlan,
+      leftData: findPlan.data,
+      leftFiles: findPlan.files,
+      isCurrent: true,
+    });
+
+    if (!createSubPlan)
+      return res.status(500).json({ message: "Internel Issues" });
 
     const addedPlan = await User.findByIdAndUpdate(
       checkUser,
       {
-        $addToSet: { BuyPlan :  createSubPlan._id},
+        $addToSet: { BuyPlan: createSubPlan._id },
       },
       {
         new: true,
@@ -89,104 +88,77 @@ const addPlan = async (req, res) => {
     res
       .status(200)
       .json({ addedPlan, message: "Sucessfully updated new plan" });
-
   } catch (error) {
-
     console.log("addPlan", error);
-
   }
 };
 
- 
-const updateValidity = async(req, res) => {
-    const uri = process.env.URI; // Replace with your MongoDB connection string
-    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-  
-    try {
-      await client.connect();
-      const database = client.db('InShare'); // Replace with your database name
-      const collection = database.collection('BuyPlan');
-  
-      const result = await collection.updateMany(
-        { leftValidity: { $gt: 0 } }, // Only update documents where data is greater than 0
-        { $inc: { leftValidity: -1 } } // Decrement the data field by 1
-      );
-      res.status(200).json({ data : result.modifiedCount, message : "document(s) were updated."})
-      // console.log(`${result.modifiedCount} document(s) were updated.`);
-    }catch(error) {
-      console.error(`updateValidity ${error}`);
-    } finally {
-      await client.close();
-    }
-}
-
-const changeisActivate = async(req, res) => {
-     const buyPlan = req.body
-     if(!buyPlan) 
-       return res.status(400).json({message : "insufficient data"})
-      const change = await BuyPlan.findByIdAndUpdate(
-        buyPlan._id,
-        {
-          isActivate : !buyPlan.isActivate
-        },
-        {
-          new: true
-        }
-      )
-}
-
-
-const fetchPlan = async (req, res) => {
+const changeisActivate = async (req, res) => {
   try {
-    const user = req.body;
-    if (!user) return res.status(400).json({ message: "Insufficient data" });
-    const email = user.emailAddresses[0].emailAddress;
-    const username = user.username;
-    const findUser = await User.findOne({
-      $or: [{ email }, { username }],
-    });
-    if (!findUser)
-      return res.status(400).json({ message: "User doesn't exist" });
-    
-    res
-      .status(200)
-      .json({
-        planData,
-        message: "Sucessfully fetched user's plan and current spent plan",
-      });
+    const buyPlan = req.body;
+    if (!buyPlan) return res.status(400).json({ message: "insufficient data" });
+    const change = await BuyPlan.findByIdAndUpdate(
+      buyPlan._id,
+      {
+        isActivate: !buyPlan.isActivate,
+      },
+      {
+        new: true,
+      }
+    );
+    if (!change) return res.status(400).json({ message: "Plan doesn't exist" });
+    return res.status(200).json({ change, message: "Succcessfully" });
   } catch (error) {
-    console.log("fetchPlan", error);
+    console.log("changeisActivate", error);
   }
 };
-
 
 const fetchPurchashedPlans = async (req, res) => {
   try {
     const userdata = req.body;
-    // console.log(req.body);
-    if (!userdata) return res.status(400).json({ message: "Insufficient data" });
-    const email = userdata.email;
-    const username = userdata.username;
 
-    const checkUser = await User.findOne({
-      $or: [{ email }, { username }]
-    })
-      .populate({
-        path: 'BuyPlan',
-        populate: {
-          path: 'Plan'
-        }
-      });
-    
-    if (checkUser) {
-      res.status(200).json({ result: checkUser, message: "Successfully fetched previous plans" });
-    } else {
-      res.status(404).json({ message: "User not found" });
+    if (!userdata) {
+      return res.status(400).json({ message: "Insufficient data" });
     }
+
+    const { email, username } = userdata;
+
+    // Find the user by email or username and populate the BuyPlan and Plan fields
+    const checkUser = await User.findOne({
+      $or: [{ email }, { username }],
+    }).populate({
+      path: "BuyPlan",
+      populate: {
+        path: "Plan",
+      },
+    });
+
+    if (!checkUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const arrOfBuyPlan = checkUser.BuyPlan;
+
+    for (let i = 0; i < arrOfBuyPlan.length; i++) {
+      const buyPlan = arrOfBuyPlan[i];
+      
+      if (buyPlan.leftValidity === buyPlan.Plan.days) {
+        buyPlan.isActivate = false;
+
+        await buyPlan.save();
+      }
+    }
+
+    res.status(200).json({
+      arrOfBuyPlan,
+      message: "Successfully fetched previous plans",
+    });
   } catch (error) {
     console.log("fetchPurchashedPlans", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
+
 
 const fetchActivatedBuyPlan = async (req, res) => {
   try {
@@ -203,12 +175,10 @@ const fetchActivatedBuyPlan = async (req, res) => {
         if (err) {
           return res.status(400).json({ message: "plan is not bought yet" });
         } else {
-          return res
-            .status(200)
-            .json({
-              ActivatedBuyPlan: findUser.BuyPlan,
-              message: "sucessfully Plan fetched",
-            });
+          return res.status(200).json({
+            ActivatedBuyPlan: findUser.BuyPlan,
+            message: "sucessfully Plan fetched",
+          });
         }
       });
   } catch (error) {
@@ -219,9 +189,7 @@ module.exports = {
   register,
   login,
   addPlan,
-  fetchPlan,
   fetchPurchashedPlans,
-  updateValidity,
   changeisActivate,
-  fetchActivatedBuyPlan
+  fetchActivatedBuyPlan,
 };

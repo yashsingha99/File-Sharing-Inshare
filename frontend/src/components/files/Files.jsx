@@ -5,7 +5,7 @@ import { ButtonBase } from "@mui/material";
 import {
   addFile,
   fetchActivatedBuyPlan,
-  // updatePassword as apiUpdatePassword,
+  upadatePassword 
 } from "../../api/api";
 import { fetchPurchashedPlans } from "../../api/user.api";
 import { storage } from "../../firebase/config";
@@ -100,6 +100,34 @@ function Files() {
     setIsCopied(true);
     setTimeout(() => setIsCopied(false), 3000);
   };
+  const UpdatePassword = async (data) => {
+    const res = await upadatePassword(data)
+    console.log("UpdatePassword", res);
+  }
+
+  const handlePasswordUpdate = () => {
+    MySwal.fire({
+      title: "Are you sure?",
+      text: "Do you really want to update the password?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Proceed",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const data = { password, fileId };
+        await UpdatePassword(data);
+        MySwal.fire("Success", "Password updated.", "success");
+        setPassword("");
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        MySwal.fire("Cancelled", "Password update cancelled.", "error");
+      }
+    });
+  };
+
+
 
   const handleFileUpload = async () => {
     // const isAbleToUpload = await checkIsAbleToUpload();
@@ -146,27 +174,7 @@ function Files() {
     setIsShare(false);
   };
 
-  const handlePasswordUpdate = () => {
-    MySwal.fire({
-      title: "Are you sure?",
-      text: "Do you really want to update the password?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Proceed",
-      cancelButtonText: "Cancel",
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        const data = { password, fileId };
-        await apiUpdatePassword(data);
-        MySwal.fire("Success", "Password updated.", "success");
-        setPassword("");
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        MySwal.fire("Cancelled", "Password update cancelled.", "error");
-      }
-    });
-  };
+ 
 
   if (!isUploadFile)
     return (
@@ -301,7 +309,7 @@ function Files() {
                     className="w-3/4 bg-white rounded Input focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                   />
                   <button
-                    onClick={updatePassword}
+                    onClick={handlePasswordUpdate}
                     className="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg"
                   >
                     Update
@@ -332,3 +340,5 @@ function Files() {
       </>
     );
 }
+
+export default Files

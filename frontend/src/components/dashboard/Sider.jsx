@@ -17,7 +17,7 @@ function Sider() {
     {
       label: "Send Data",
       icon: <IosShareIcon />,
-      onClick: () => navigate("/app"),
+      onClick: () => navigate("/app/shareFile"),
     },
     {
       onClick: () => navigate("/app/history"),
@@ -49,7 +49,6 @@ function Sider() {
     width: window.innerWidth,
     hight: window.innerHeight,
   });
-  console.log(pageSize.width);
   useEffect(() => {
     const handleResize = () => {
       setPageSize({

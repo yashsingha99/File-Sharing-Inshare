@@ -44,7 +44,7 @@ function Home() {
               </SignedOut>
               <SignedIn>
                 <button
-                  onClick={() => navigate("/app")}
+                  onClick={() => navigate("/app/shareFile")}
                   className="bg-cyan-700 text-white gap-2 font-medium py-3 px-6 flex items-center btn-border rounded hover:bg-white hover:text-cyan-800 transition"
                 >
                   <p>Quick Share</p>

@@ -139,7 +139,7 @@ function App() {
           <Route path="/learnMore" element={<LearnMore />} />
           <Route path="/contactUs" element={<ContactUs />} />
           <Route path="/app" element={<Dashoard />}>
-            <Route path="/app/" element={<ShareFile />} />
+            <Route path="/app/shareFile" element={<ShareFile />} />
             <Route path="/app/pricing" element={<Premium />} />
             <Route path="/app/history" element={<History />} />
             <Route path="/app/planlimit" element={<PlanLimit />} />

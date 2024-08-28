@@ -38,7 +38,9 @@ function Premium() {
   useEffect(() => {
     const fetch = async () => {
       const resPlan = await fetchPurchashedPlans(user);
-      setAllBoughtPlan(resPlan.data.result.BuyPlan);
+      console.log(resPlan);
+      
+      setAllBoughtPlan(resPlan.data.arrOfBuyPlan);
     };
     user && fetch();
   }, [location, user, isbuy]);
@@ -111,6 +113,7 @@ function Premium() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         const data = { plan, user };
+        
         const res = await addPlan(data);
         console.log(res);
         setIsBuy((p) => !p);

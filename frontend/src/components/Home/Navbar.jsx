@@ -20,7 +20,6 @@ function Navbar() {
     width: window.innerWidth,
     hight: window.innerHeight,
   });
-  console.log(pageSize);
   const navItems = [
     {
       path: "/",
