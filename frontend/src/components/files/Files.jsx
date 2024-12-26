@@ -7,7 +7,6 @@ import {
   fetchActivatedBuyPlan,
   upadatePassword 
 } from "../../api/api";
-import { fetchPurchashedPlans } from "../../api/user.api";
 import { storage } from "../../firebase/config";
 import { useUser } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
@@ -20,7 +19,6 @@ import DoneIcon from "@mui/icons-material/Done";
 import FileDrop from "./FileDrop";
 import filesrc from "../../images/file.png";
 import "./file.css";
-
 const MySwal = withReactContent(Swal);
 
 function Files() {
@@ -31,7 +29,7 @@ function Files() {
   const [isUploadFile, setIsUploadFile] = useState(false);
   const [progress, setProgress] = useState(0);
   const [file, setFile] = useState(null);
-  const [allBoughtPlan, setAllBoughtPlan] = useState([]);
+  const [activatedPlan, setActivatedPlan] = useState();
   const [fileType, setFileType] = useState("");
   const [fileId, setFileId] = useState("");
   const [isCopied, setIsCopied] = useState(false);
@@ -40,6 +38,7 @@ function Files() {
   const navigate = useNavigate();
   const path = "http://localhost:5173";
 
+  // get window size for all resolutions
   useEffect(() => {
     const handleResize = () => {
       setPageSize({
@@ -53,30 +52,40 @@ function Files() {
     };
   }, []);
 
-  useEffect(() => {
-    const fetchPlans = async () => {
-      if (user) {
-        const resPlan = await fetchPurchashedPlans(user);
-        setAllBoughtPlan(resPlan.data.result.BuyPlan);
-      }
-    };
-    fetchPlans();
-  }, [user]);
-
+   
   const checkIsAbleToUpload = async () => {
+    if(!user) return false;
     const res = await fetchActivatedBuyPlan(user);
+    console.log(res);
+    
     if (res.status === 400) {
       await MySwal.fire({
         title: "You are not able to share the file",
-        text: "You need to purchase a plan before sharing files.",
+        text: res.data.message,
         icon: "warning",
         showCancelButton: true,
-        confirmButtonText: "Go to Plans",
+        confirmButtonText: "Activate Plans",
+        confirmButtonColor: "#d33",
+      }).then((result) => {
+        if (result.isConfirmed) navigate("/app/planlimit");
+      });
+      return false;
+    }
+    else if (res.status === 500) {
+      await MySwal.fire({
+        title: "Internal Issues",
+        text: "",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Go to Home",
         confirmButtonColor: "#d33",
       }).then((result) => {
         if (result.isConfirmed) navigate("/");
       });
       return false;
+    } 
+    else if(res.status == 200){
+      
     }
     return true;
   };
@@ -100,6 +109,7 @@ function Files() {
     setIsCopied(true);
     setTimeout(() => setIsCopied(false), 3000);
   };
+
   const UpdatePassword = async (data) => {
     const res = await upadatePassword(data)
     console.log("UpdatePassword", res);
@@ -127,12 +137,13 @@ function Files() {
     });
   };
 
-
-
   const handleFileUpload = async () => {
-    // const isAbleToUpload = await checkIsAbleToUpload();
-    // if (isAbleToUpload && file) {
       try {
+        if(!checkIsAbleToUpload()) {
+           console.log("ddfdf");
+           
+        }
+
         const imgRef = ref(storage, `files/${uuidv4()}`);
         const uploadTask = uploadBytesResumable(imgRef, file, file.type);
 
@@ -174,7 +185,7 @@ function Files() {
     setIsShare(false);
   };
 
- 
+
 
   if (!isUploadFile)
     return (

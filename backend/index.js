@@ -18,4 +18,6 @@ connectDb()
 
 
 const app = require("./app")
-app.listen(3000, console.log("server is running...."))
+app.listen(8000, '0.0.0.0', () => {
+    console.log('Server is running on http://192.168.232.78:5000');
+  })

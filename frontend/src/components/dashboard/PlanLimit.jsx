@@ -33,16 +33,12 @@ function PlanLimit() {
     const istGivenDate = new Date(utcDate.getTime() + istOffset);
     const istCurrentDate = new Date(currentUtcDate.getTime() + istOffset);
     const timeDifference = istCurrentDate - istGivenDate;
-    console.log(timeDifference);
-    
     const dayDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-
     return dayDifference;
   };
 
   const changeActivity = async (buyPlan, i) => {
-    const activateId = Cookies.get("$plan_activate");
-    console.log(activateId);
+    const activateId = localStorage.getItem("$plan_activate");
     if (activateId) {
       if (activateId !== buyPlan._id) {
         MySwal.fire({
@@ -73,11 +69,18 @@ function PlanLimit() {
 
     if (result.isConfirmed) {
       const res = await changeIsActivate(buyPlan);
-      console.log("res");
+      console.log("res", res);
 
       if (res.status === 200) {
-        if (action === "Deactivate") Cookies.remove("$plan_activate");
-        else Cookies.set("$plan_activate", buyPlan._id);
+        if (action === "Deactivate") {
+           Cookies.remove("$plan_activate");
+           console.log("removed");
+             
+        }
+        else  {
+           localStorage.setItem("$plan_activate", buyPlan._id);
+           console.log("new");
+        }
         MySwal.fire("Success", `${action}d successfully`, "success");
         setIsActivate(i);
         setAllBoughtPlan((prev) =>
@@ -108,13 +111,13 @@ function PlanLimit() {
       <div className="w-full flex flex-wrap">
         {allBoughtPlan.map((planData, i) => {
           const totaldays = getDays(planData.createdAt)
-          if(i == 5)
-          console.log(totaldays+"days");
+          // if(i == 5)
+          // console.log(totaldays+"days");
           
           if(activateId === planData._id && planData.Plan.days >= totaldays){
-             Cookies.remove("$plan_activate")
+             localStorage.removeItem("$plan_activate")
           }
-          if(planData.Plan.days !== totaldays)
+          if(planData.Plan.days >= totaldays)
         return (
           <div
             key={i}

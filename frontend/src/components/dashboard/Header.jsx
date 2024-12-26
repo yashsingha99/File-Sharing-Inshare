@@ -10,11 +10,12 @@ import { useNavigate } from "react-router-dom";
 function Header() {
   const user = useUser();
   const navigate = useNavigate();
- 
+
   return (
     <header className="w-full fixed header bg-blue-100 text-gray-600 body-font">
-      <div className=" mx-auto flex flex-wrap p-5  justify-between items-center">
+      <div className="mx-auto flex flex-wrap p-5 justify-between items-center">
         <div
+          onClick={() => navigate('/')}
           className="flex cursor-pointer title-font font-medium items-center text-gray-900 mb-4 md:mb-0"
         >
           <svg

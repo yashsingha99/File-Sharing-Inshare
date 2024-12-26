@@ -64,8 +64,6 @@ const addPlan = async (req, res) => {
 
     const createSubPlan = await BuyPlan.create({
       Plan: findPlan,
-      leftData: findPlan.data,
-      leftFiles: findPlan.files,
       isCurrent: true,
     });
 
@@ -141,7 +139,7 @@ const fetchPurchashedPlans = async (req, res) => {
 
     for (let i = 0; i < arrOfBuyPlan.length; i++) {
       const buyPlan = arrOfBuyPlan[i];
-      
+
       if (buyPlan.leftValidity === buyPlan.Plan.days) {
         buyPlan.isActivate = false;
 
@@ -159,32 +157,44 @@ const fetchPurchashedPlans = async (req, res) => {
   }
 };
 
-
 const fetchActivatedBuyPlan = async (req, res) => {
   try {
     const { username, email } = req.body;
+    
     if (!username && !email) {
-      return res.status(400).json("insufficient data");
+      return res.status(400).json({ message: "Insufficient data" });
     }
 
-    const findUser = await User.findOne({
+    const user = await User.findOne({
       $or: [{ email }, { username }],
     })
-      .populate("BuyPlan")
-      .exec((err, user) => {
-        if (err) {
-          return res.status(400).json({ message: "plan is not bought yet" });
-        } else {
-          return res.status(200).json({
-            ActivatedBuyPlan: findUser.BuyPlan,
-            message: "sucessfully Plan fetched",
-          });
-        }
-      });
+    .populate({
+      path: "BuyPlan",
+      match: { isActivate: true },  
+      populate: {
+        path: "Plan",
+      },
+    })
+    .select("BuyPlan");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    
+    if (!user.BuyPlan.length) {
+      return res.status(400).json({ message: "You haven't purchased any active plan" });
+    }
+
+    return res.status(200).json({
+      activatePlan: user.BuyPlan,
+      message: "Successfully fetched active plans",
+    });
   } catch (error) {
-    console.log("fetchAllPlans", error);
+    console.error("fetchActivatedBuyPlan error:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
+
 module.exports = {
   register,
   login,
